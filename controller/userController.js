@@ -1,30 +1,37 @@
 const userServices = require('../services/userServices')
+
 console.log("In controller");
+
 exports.register = (req, res) => {
-    console.log("In controller1");
-    req.checkBody('firstName', 'First Name is Invaild').notEmpty().isAlpha();
-    req.checkBody('lastName', 'Last Name is Invaild').notEmpty().isAlpha();
-    req.checkBody('email', 'Email is invalid').notEmpty().isEmail();
-    req.checkBody('password', 'Password is Invalid').notEmpty().len(4, 10);
-    var error = req.validationErrors();
-    var response = {};
-    if (error) {
-        response.error = error;
-        response.success = false;
-        res.status(422).send(response)
-        console.log("Error in Register field", error)
-        console.log("Responde--->", response)
-    } else {
-        userServices.register = (req, (err, data) => {
-            if (err) {
-                response.success = false;
-                response.data = err;
-                res.status(404).send(response);
-            } else {
-                respons.success = true;
-                response.data = data;
-                res.status(200).send(response);
-            }
-        })
+    try {
+        console.log("In controller---->");
+        req.checkBody('firstName', 'firstname is invalid').notEmpty().isAlpha();
+        req.checkBody('lastName', 'lastname is invalid').notEmpty().isAlpha();
+        req.checkBody('email', 'email is invalid').notEmpty().isEmail();
+        req.checkBody('password', 'password is invalid').notEmpty().len(6,10);
+        var error = req.validationErrors();
+        var response = {};
+        if (error) {
+            response.error = error;
+            response.sucess = false;
+            res.status(422).send(response);
+            console.log("errpo-register", error);
+            console.log("REs", response)
+        } else {
+            userServices.register(req, (err, data) => {
+                if (err) {
+                    response.sucessss = false;
+                    response.data = err;
+                    res.status(404).send(response);
+                } else {
+                    response.sucess = true;
+                    response.data = data;
+                    res.status(200).send(response);
+                }
+            })
+
+        }
+    } catch (e) {
+        console.log(e);
     }
 }
