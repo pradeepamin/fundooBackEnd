@@ -28,9 +28,7 @@ const usersData = new Schema({
 )
 
 
-
 var registerUsers = mongoose.model("users", usersData);
-
 
 /**
  * @desc Gets the input from front end and stores data in deatabase
@@ -69,4 +67,19 @@ exports.Register = (req, callback) => {
     } catch (e) {
         console.log(e);
     }
+}
+
+exports.Login=(req,callback)=>{
+    registerUsers.findOne({"email":req.body.email},(err,data)=>{
+        if(data){
+            bcrypt.compare(req.body.password,data.password,(err,sucess)=>{
+                if(sucess)
+                callback(null,data);
+                else
+                callback("wrong Password");
+            })
+        }
+        else
+        callback ("email doesnt match or exit")
+    } )
 }
