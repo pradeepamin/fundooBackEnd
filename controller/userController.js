@@ -1,4 +1,6 @@
 const userServices = require('../services/userServices')
+const tokenGenerate = require('../middleware/token');
+const nodemailer=require('../middleware/nodeMailer');
 
 /**
  * @desc Gets the input from front end filters and performs validation  
@@ -39,6 +41,7 @@ exports.register = (req, res) => {
 }
 
 exports.login = (req, res) => {
+    console.log("IN login")
     req.checkBody('email', 'Email is invalid').isEmail().notEmpty();
     req.checkBody('password', 'Password is Invalid').notEmpty().len(6, 10);
     var error = req.validationErrors();
@@ -60,4 +63,40 @@ exports.login = (req, res) => {
             }
         })
     }
+}
+
+exports.forgotPassword=(req,res)=>{
+    console.log("IN con forgot pass")
+    req.checkBody('email','Email is Invalid').isEmail().notEmpty();
+    var error=req.validationErrors();
+    var response={};
+    if(error){
+        response.error=error;
+        response.sucess=false;
+        res.status(422).send(response);
+    }else{
+        userServices.forgotPassword(req,(err,data)=>{
+            console.log("display req",req.body)
+            if(err){
+                response.sucessxx=false;
+                response.data=err;
+                res.status(404).send(response);
+            }else{
+                let payload=data._id;
+                let obj=tokenGenerate.generateToken(payload);
+            console.log("Token in contoller",obj.token)
+                let url=`http://localhost:4000/#!/resetPassword/${obj.token}` //process.env.URL
+                console.log("controller Payload",url);
+                console.log("Email id",req.body.email);
+                
+                
+                nodemailer.sendMail(url,req.body.email)
+                response.sucess=true;
+                response.data=data;
+                res.status(200).send(response);
+            }
+        })
+    }
+    console.log("IN con forgot pass end")
+    
 }
