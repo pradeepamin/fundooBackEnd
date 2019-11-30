@@ -83,3 +83,24 @@ exports.Login=(req,callback)=>{
         callback ("email doesnt match or exit")
     } )
 }
+exports.ForgotPasssword=(req,callback)=>{
+    registerUsers.findOne({"email":req.body.email},(err,data)=>{
+        if(data){
+            callback(null,data)
+        }
+        else{
+            callback("User name not registed or not exists")
+        }
+    })
+}
+exports.ResetPassword=(req,callback)=>{
+    console.log("reqqqqq", req.decoded);
+    bcrypt.hash(req.body.password,10,(err,encrypted)=>{
+        registerUsers.updateOne({"_id":req.decoded.payload},{"password":encrypted},(err,data)=>{
+            if(data)
+            callback(null,data);
+            else
+            callback(err);
+        })
+    })
+}
