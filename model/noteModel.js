@@ -5,11 +5,15 @@ const mongoose = require("mongoose");
 var Schema = mongoose.Schema
 const fundoNotes = new Schema({
     /** creating schema for registration */
+    _userId:{
+        type:Schema.Types.ObjectId,
+        required:true
+    },
     title: {
         type: String,
         required: true
     },
-    discription: {
+    description: {
         type: String,
         required: true
     }
