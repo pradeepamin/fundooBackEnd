@@ -1,0 +1,29 @@
+{
+    "registration":
+     {
+        "firstName": "pradeep",
+        "lastName": "Amin",
+        "email": "pradeepbamin@gmail.com",
+        "password": "1234567",
+        "confirmPassword": "1234567"
+    },
+
+    "login": 
+    {
+        "email": "pradeepbamin5@gmail.com",
+        "password": "1234567"
+    },
+
+    "forgotPassword": 
+    {
+        "email": "pradeepbamin5@gmail.com"
+    },
+
+    "resetPassword":
+    {
+    "password":"1234567",
+    "confirmPassword":"1234567"
+    }
+
+
+}
