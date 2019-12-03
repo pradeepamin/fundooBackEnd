@@ -7,6 +7,7 @@ const fundoNotes = new Schema({
     /** creating schema for registration */
     _userId:{
         type:Schema.Types.ObjectId,
+        ref:"users",
         required:true
     },
     title: {
@@ -16,7 +17,13 @@ const fundoNotes = new Schema({
     description: {
         type: String,
         required: true
-    }
+    },
+   
+    isDeleted: {
+        type: Boolean,
+        default: false
+      } 
+
 },
     {
         timestamps: true
