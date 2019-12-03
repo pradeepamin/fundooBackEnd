@@ -68,7 +68,9 @@ exports.login = (req, res) => {
                     "id": data._id
                 })
                 )
+                console.log("Only generated token--->",data1);
                 data1.push(data)
+                console.log(" generated token with paste login data--->",data1);
                 response.data=data1
                 res.status(200).send(response);
             }
