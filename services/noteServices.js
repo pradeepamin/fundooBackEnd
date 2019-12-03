@@ -14,9 +14,7 @@ exports.addUser = (req) => {
         noteDetails.save((err, data) => {
             if (data) {
                 resolve(data);
-
             } else {
-
                 reject(err);
             }
         })
