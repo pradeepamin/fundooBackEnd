@@ -4,7 +4,7 @@ exports.generateToken = (payload) => {
     {
         //console.log("in token id",payload);
         console.log("token-payload-->", payload)
-        const token = jwt.sign({ payload }, process.env.KEY, { expiresIn: '7d' }) // expires in 1 hour
+        const token = jwt.sign({ payload }, process.env.KEY, { expiresIn: '24h' }) // expires in 1 hour
         console.log("key------>", process.env.KEY)
         const obj = {
             success: true,
@@ -32,6 +32,8 @@ exports.userVerify = (req, res, next) => {
     console.log("verifies request");
     var token = req.headers.token;
     jwt.verify(token, process.env.KEY, (err, result) => {
+        console.log("REsul=-================>",result);
+        
         if (err) res.status(422).send({ message: "token is incorrect" });
         else {
             req.decoded = result;

@@ -20,7 +20,7 @@ exports.register = (req, callback) => {
                     bcrypt.hash(req.body.password, 10, (err, encrypted) => {
                         var userDetails = new userModel.registerUsers({
                             "firstName": req.body.firstName,
-                            "lastName": req.body.lastName,
+                            "lastName": req.body.lastName,   
                             "email": req.body.email,
                             "password": encrypted
                         })

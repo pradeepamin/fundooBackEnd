@@ -32,3 +32,4 @@ app.listen(process.env.PORT, () => {
     dbConnect.dbConnection();
 });
 
+module.exports = app
