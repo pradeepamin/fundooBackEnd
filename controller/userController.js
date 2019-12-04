@@ -140,3 +140,23 @@ exports.resetPassword = (req, res) => {
         }
     }
 }
+
+
+exports.imageUpload = (req, res) => {
+    console.log("image url-->",req.imageURL);
+    const imageURL=req.imageURL;
+    var response={}
+    userServices.imageUpload(req,imageURL,(err,result)=>{
+        if(err){
+            console.log("error");
+            response.err=err;
+            res.status(404).send(response);
+        }else{
+            console.log("result");
+            response.result=result;
+            response.imageUrl=imageURL;
+            res.status(200).send(response)
+        }
+    })
+}
+
