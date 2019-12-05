@@ -22,7 +22,7 @@ const usersData = new Schema({
         required: true
     },
     imageUrl:{
-        type:String,
+        type:String
     }
 },
     {

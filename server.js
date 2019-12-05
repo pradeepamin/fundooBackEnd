@@ -19,9 +19,11 @@ const expressValidator=require('express-validator');
 require('dotenv').config()
 const app=express();
 app.use(cors());
+
 app.use(bodyParser.json());     
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(expressValidator());
+
 app.use('/user', routerUser);
 app.use('/note', routerNote);
 console.log("process.env",process.env.PORT);

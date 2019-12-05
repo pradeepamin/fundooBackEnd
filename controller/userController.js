@@ -144,6 +144,7 @@ exports.resetPassword = (req, res) => {
 
 exports.imageUpload = (req, res) => {
     console.log("image url-->",req.imageURL);
+    // console.log("req to check image-->",req);
     const imageURL=req.imageURL;
     var response={}
     userServices.imageUpload(req,imageURL,(err,result)=>{

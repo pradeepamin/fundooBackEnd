@@ -27,7 +27,7 @@ const upload = multer({
     contentType: multerS3.AUTO_CONTENT_TYPE,
     acl: 'public-read',
     metadata: (req, file, cb) => {
-      console.log("req in multer", file);
+      // console.log("req in multer", file);
       cb(null, { fieldName: 'Profile' });
     },
     key: (req, file, cb) => {

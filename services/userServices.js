@@ -74,19 +74,19 @@ exports.resetPassword = (req, callback) => {
     })
 }
 
-exports.imageUpload = (req, imageUrl,cb) => {
+exports.imageUpload = (req, imageUrl,callback) => {
 
         console.log("user id", req.decoded.payload.id);
         userModel.USERS.findOne({ "_id": req.decoded.payload.id }, (err, data) => {
             if (err) {
-                cb(err);
+                callback(err);
             } else {
                 userModel.USERS.updateOne({ "_id": req.decoded.payload.id }, { "imageUrl": imageUrl }, (err, data1) => {
                     if (err) {
-                        cb(err);
+                        callback(err);
                     } else {
                         console.log("data1",data1);
-                        cb(null,data1)
+                        callback(null,data1)
                     }
                 })
             }

@@ -1,7 +1,7 @@
 const userController=require('../controller/userController');
 const express=require('express');
 const router=express.Router();
-const tokenRec=require('../helper/token')
+const tokenRec = require('../helper/token')
 const userToken=require('../helper/token');
 
 const upload = require('../helper/mutlerFileUpload')
@@ -14,10 +14,9 @@ router.post('/login',userController.login)
 router.post('/forgotPassword',userController.forgotPassword)
 router.post('/resetPassword/:token',tokenRec.verify,userController.resetPassword)
 router.post('/image-upload',userToken.userVerify, (req,res,next)=>{
-     singleUpload(req, res, (err) => {
-        console.log("req.file", req.file);
+     singleUpload(req, res, (err) => {         
+            console.log("req.file", req.file);                          
             const imageURL = req.file.location;
-            console.log("hi",imageURL);
             req.imageURL=imageURL;
             next();
     });     
