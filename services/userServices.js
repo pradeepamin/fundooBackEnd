@@ -10,7 +10,7 @@ exports.register = (req, callback) => {
  * @param callback a callback function
  * @return return a call back function err or data
  */
-    userModel.registerUsers.findOne({ "email": req.body.email }, (err, data) => {
+    userModel.USERS.findOne({ "email": req.body.email }, (err, data) => {
         if (data) callback("user exits");
         else {
             emailExistance.check(req.body.email, (err, result) => {
@@ -18,7 +18,7 @@ exports.register = (req, callback) => {
                 if (!result) callback("provide valid email")
                 else {
                     bcrypt.hash(req.body.password, 10, (err, encrypted) => {
-                        var userDetails = new userModel.registerUsers({
+                        var userDetails = new userModel.USERS({
                             "firstName": req.body.firstName,
                             "lastName": req.body.lastName,
                             "email": req.body.email,
@@ -38,7 +38,7 @@ exports.register = (req, callback) => {
 }
 
 exports.login = (req, callback) => {
-    userModel.registerUsers.findOne({ "email": req.body.email }, (err, data) => {
+    userModel.USERS.findOne({ "email": req.body.email }, (err, data) => {
         if (data) {
             bcrypt.compare(req.body.password, data.password, (err, sucess) => {
                 if (sucess)
@@ -53,7 +53,7 @@ exports.login = (req, callback) => {
 }
 
 exports.forgotPassword = (req, callback) => {
-    userModel.registerUsers.findOne({ "email": req.body.email }, (err, data) => {
+    userModel.USERS.findOne({ "email": req.body.email }, (err, data) => {
         if (data) {
             callback(null, data)
         }
@@ -65,7 +65,7 @@ exports.forgotPassword = (req, callback) => {
 exports.resetPassword = (req, callback) => {
     console.log("reqqqqq", req.decoded);
     bcrypt.hash(req.body.password, 10, (err, encrypted) => {
-        userModel.registerUsers.updateOne({ "_id": req.decoded.payload }, { "password": encrypted }, (err, data) => {
+        userModel.USERS.updateOne({ "_id": req.decoded.payload }, { "password": encrypted }, (err, data) => {
             if (data)
                 callback(null, data);
             else
@@ -77,11 +77,11 @@ exports.resetPassword = (req, callback) => {
 exports.imageUpload = (req, imageUrl,cb) => {
 
         console.log("user id", req.decoded.payload.id);
-        userModel.registerUsers.findOne({ "_id": req.decoded.payload.id }, (err, data) => {
+        userModel.USERS.findOne({ "_id": req.decoded.payload.id }, (err, data) => {
             if (err) {
                 cb(err);
             } else {
-                userModel.registerUsers.updateOne({ "_id": req.decoded.payload.id }, { "imageUrl": imageUrl }, (err, data1) => {
+                userModel.USERS.updateOne({ "_id": req.decoded.payload.id }, { "imageUrl": imageUrl }, (err, data1) => {
                     if (err) {
                         cb(err);
                     } else {
