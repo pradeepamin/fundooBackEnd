@@ -1,5 +1,5 @@
 const noteController=require('../controller/noteController');
-const noteVerify=require('../middleware/token')
+const noteVerify=require('../helper/token')
 const express=require('express');
 const router=express.Router();
 

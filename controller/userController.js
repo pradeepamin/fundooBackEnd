@@ -1,6 +1,6 @@
 const userServices = require('../services/userServices')
-const tokenGenerate = require('../middleware/token');
-const nodemailer = require('../middleware/nodeMailer');
+const tokenGenerate = require('../helper/token');
+const nodemailer = require('../helper/nodeMailer');
 require('dotenv').config();
 
 /**

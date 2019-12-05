@@ -1,10 +1,10 @@
 const userController=require('../controller/userController');
 const express=require('express');
 const router=express.Router();
-const tokenRec=require('../middleware/token')
-const userToken=require('../middleware/token');
+const tokenRec=require('../helper/token')
+const userToken=require('../helper/token');
 
-const upload = require('../services/fileUploadServices')
+const upload = require('../helper/mutlerFileUpload')
 
 var singleUpload = upload.single('image');
 
