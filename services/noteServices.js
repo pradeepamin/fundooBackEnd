@@ -54,10 +54,9 @@ exports.deleteNote = (req) => {
 
 exports.updateNote = (req) => {
     return new Promise((resolve, reject) => {
-        noteModel.notes.findByIdAndUpdate({
-            _id: req.body._id}, {title: req.body.title,description: req.body.description}, (err, data) => {
-                if (err) reject(err)
-                else resolve(data)
-            })
+        noteModel.notes.findByIdAndUpdate({ _id: req.body._id }, { title: req.body.title, description: req.body.description }, (err, data) => {
+            if (err) reject(err)
+            else resolve(data)
+        })
     })
 }

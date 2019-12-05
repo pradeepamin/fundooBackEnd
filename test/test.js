@@ -1,3 +1,15 @@
+/********************************************************************************************************************
+ * @Execution   : default nodemon : test.js
+ * @Purpose     : To compare the output of a certain test with its expected value.
+ * @description : Testing is done for user,notes
+ * @overview    : Chai mocha 
+ * @author      : PRADEEP B AMIN<pradeepbamin5@gmail.com>
+ * @version     : chai:4.2.0,chai-http:4.3.0, mocha:6.0.0
+ * @since       : 03-DEC-2019
+ * @Start       : /Desktop/Pradeep/fundoo/server$ npm test
+ *
+ *******************************************************************************************************************/
+
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 chai.use(chaiHttp);
@@ -14,7 +26,7 @@ function readFile() {
     return data1;
 }
 /**
- * @description:test script for registration 
+ * @description:test script for user-registration 
  */
 describe('Status and content', function () {
     describe('Registration page', function () {
@@ -22,7 +34,6 @@ describe('Status and content', function () {
         it('status ', function (done) {
             chai.request(server).post('/user/register').send(data1.registration).end((err, res) => {
                 // console.log("register------->",res.body);
-
                 if (err) {
                     console.log("expect ==>", err);
                     err.should.have.status(500);
@@ -35,10 +46,10 @@ describe('Status and content', function () {
             })
         })
     })
-    /**
-      * @description:test script for login
-     */
-    describe('Login page', function () {
+    /*
+     * @description:test script for user-login
+    */
+    describe('Login page', function ()  {
         let data1 = readFile();
         it('status ', function (done) {
             chai.request(server).post('/user/login').send(data1.login).end((err, res) => {
@@ -52,7 +63,9 @@ describe('Status and content', function () {
             })
         })
     })
-
+    /*
+      * @description:test script for user-forgotPassword
+    */
     describe('forgotPassword page', function () {
         let data1 = readFile();
         it('status ', function (done) {
@@ -68,9 +81,9 @@ describe('Status and content', function () {
         })
     })
 
-
-
-
+    /*
+      * @description:test script for user-resetPassword
+    */
     describe('resetPassword page', function () {
         let data1 = readFile();
         it('status ', function (done) {
@@ -86,12 +99,26 @@ describe('Status and content', function () {
         })
     })
 
-
-
+     /*
+      * @description:test script for user-resetPassword
+    */
+   describe('addNote page', function () {
+    let data1 = readFile();
+    it('status ', function (done) {
+        chai.request(server).post('/note/addNote').send(data1.addNote).end((err, res) => {
+            if (err) {
+                console.log("addNote expect ==>", err);
+            } else {
+                console.log("addNote expect ==>", res.body);
+                res.should.have.status(200);
+                done()
+            }
+        })
+    })
 })
 
 
 
-
+})
 
 // TO test npm test

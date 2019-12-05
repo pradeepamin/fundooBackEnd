@@ -5,10 +5,10 @@ const mongoose = require("mongoose");
 var Schema = mongoose.Schema
 const fundoNotes = new Schema({
     /** creating schema for registration */
-    _userId:{
-        type:Schema.Types.ObjectId,
-        ref:"users",
-        required:true
+    _userId: {
+        type: Schema.Types.ObjectId,
+        ref: "users",
+        required: true
     },
     title: {
         type: String,
@@ -18,11 +18,12 @@ const fundoNotes = new Schema({
         type: String,
         required: true
     },
-   
+
     isDeleted: {
         type: Boolean,
         default: false
-      } 
+    },
+  
 
 },
     {

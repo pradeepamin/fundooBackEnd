@@ -20,6 +20,9 @@ const usersData = new Schema({
     password: {
         type: String,
         required: true
+    },
+    imageUrl:{
+        type:String,
     }
 },
     {
@@ -27,4 +30,4 @@ const usersData = new Schema({
     }
 )
 
-exports.registerUsers = mongoose.model("users", usersData);
+exports.USERS = mongoose.model("users", usersData);

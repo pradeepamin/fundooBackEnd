@@ -1,4 +1,3 @@
-console.log("in token");
 const jwt = require('jsonwebtoken')
 exports.generateToken = (payload) => {
     {
@@ -28,16 +27,17 @@ exports.verify = (req, res, next) => {
     })
 }
 
-exports.userVerify = (req, res, next) => {
-    console.log("verifies request");
+exports.userVerify = (req, res,next) => {
+    console.log("verifies request", req.headers.token);
+    console.log("files request", req.file);
+
     var token = req.headers.token;
     jwt.verify(token, process.env.KEY, (err, result) => {
-        console.log("REsul=-================>",result);
-        
+        console.log("REsul=-================>", result);
         if (err) res.status(422).send({ message: "token is incorrect" });
         else {
             req.decoded = result;
-            next();
+            next()
         }
     })
 }
