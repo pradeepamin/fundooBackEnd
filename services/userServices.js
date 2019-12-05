@@ -74,7 +74,6 @@ exports.resetPassword = (req, callback) => {
     })
 }
 
-
 exports.imageUpload = (req, imageUrl,cb) => {
 
         console.log("user id", req.decoded.payload.id);
