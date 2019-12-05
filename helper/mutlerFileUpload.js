@@ -1,7 +1,7 @@
 /***
  * @Purpose     : AWS S3, used for object storage through a web service interface  
  * @description : function used to store images in AWS
- * @overview    : AWS SS#
+ * @overview    : AWS S3#
 ***/
 
 require('dotenv').config();
