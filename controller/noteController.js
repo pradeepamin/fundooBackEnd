@@ -99,5 +99,25 @@ exports.updateNote = (req, res) => {
         })
 }
 
+exports.addCollaborator=(req,res)=>{
+//    console.log("RQQ---------->",req);
+   
+    
+   
+    let response={};
+   
+    
+        noteService.addCollaborator(req)
+        .then((data)=>{
+            response.sucess=true
+            response.data=data;
+            res.status(200).send(response);
+        }).catch((err)=>{
+            response.sucess=false
+            response.data=err;
+            res.status(500).send(response);
+        })
+}
+
 
 
