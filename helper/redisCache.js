@@ -10,9 +10,6 @@ client.on('error', (err) => {
 });
 
 
-
-
-
 exports.setRedis = (val,callback) => {
     client.set('key', JSON.stringify(val), (err, result) => {
         if (result) {
