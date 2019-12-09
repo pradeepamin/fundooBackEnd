@@ -68,12 +68,12 @@ exports.login = (req, res) => {
                     "email": req.body.email,
                     "id": data._id
                 })
-                console.log("NEW TOKEN",newToken);
-                
+                console.log("NEW TOKEN", newToken);
+
                 let value = newToken.token;
                 data1.push(newToken);
                 data1.push(data)
-                console.log("Generated token with paste login data--->",data1);
+                console.log("Generated token with paste login data--->", data1);
                 response.data = data1
                 res.status(200).send(response);
 
@@ -96,7 +96,7 @@ exports.login = (req, res) => {
 
 
 
-                
+
             }
         })
     }
@@ -138,6 +138,7 @@ exports.forgotPassword = (req, res) => {
 
 }
 exports.resetPassword = (req, res) => {
+    console.log(("only request",req));
     req.checkBody('password', 'password is invalid').notEmpty().len(6, 10);
     req.checkBody('confirmPassword', 'confirm password is invaild').notEmpty().len(6, 10).equals(req.body.password);
     var error = req.validationErrors();
@@ -166,11 +167,10 @@ exports.resetPassword = (req, res) => {
     }
 }
 
-
 exports.imageUpload = (req, res) => {
-    console.log("image url-->", req.imageURL);
-    // console.log("req to check image-->",req);
-    const imageURL = req.imageURL;
+    // console.log(("only request",req));
+    
+    const imageURL = req.file.location;
     var response = {}
     userServices.imageUpload(req, imageURL, (err, result) => {
         if (err) {
