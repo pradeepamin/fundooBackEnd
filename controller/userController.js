@@ -68,6 +68,8 @@ exports.login = (req, res) => {
                     "email": req.body.email,
                     "id": data._id
                 })
+                console.log("NEW TOKEN",newToken);
+                
                 let value = newToken.token;
                 data1.push(newToken);
                 data1.push(data)
@@ -83,7 +85,7 @@ exports.login = (req, res) => {
                     }
                 })
 
-                // rediscache.getRedis((err, data) => {
+                // r ediscache.getRedis((err, data) => {
                 //     if (data) {
                 //         console.log("Redis Data", data)
                 //     } else {
