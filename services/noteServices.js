@@ -1,5 +1,6 @@
 
 const noteModel = require('../model/noteModel');
+const collaboratorModel = require('../model/collaboratorModel');
 
 
 exports.addUser = (req) => {
@@ -60,3 +61,51 @@ exports.updateNote = (req) => {
         })
     })
 }
+
+exports.addCollaborator = async (req) => {
+    return await new Promise((resolve, reject) => {
+    
+        if (req.decoded.payload.id != req.body.collaboratorId) {
+
+            collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, (err, data) => {
+                if (err || data == null) {
+                    let newCollaborator = new collaboratorModel.COLLABORATOR({
+                        "_userId": verfifedPayload,
+                        "noteId": req.body.noteId,
+                        "collaboratorId": req.body.collaboratorId
+                    })
+                    newCollaborator.save((err, data) => {
+                        if (data) {
+                            resolve(data);
+
+                        } else {
+                            reject(err)
+                        }
+                    })
+                }
+                else {
+                    let arrayCollaborator = data.collaboratorId;
+                    //used fetch only disticnt value.
+                    if (arrayCollaborator.includes(req.body.collaboratorId)) {
+                        reject("User already exits")
+                    } else
+                        collaboratorModel.COLLABORATOR.updateOne({ "noteId": req.body.noteId },
+                            { $push: { "collaboratorId": req.body.collaboratorId } }, (err, data) => {
+                                if (data) {
+                                    resolve(data)
+                                } else {
+                                    reject(err)
+                                }
+                            })
+                }
+            })
+
+        } else {
+            console.log("This is your email id. Cannot be collaborate!");
+            reject("This is your email id. Cannot be collaborate!")
+        }
+    })
+}
+
+
+
