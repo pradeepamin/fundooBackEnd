@@ -32,6 +32,6 @@ console.log("process.env",process.env.PORT);
 app.listen(process.env.PORT, () => {
     console.log("Server is listing on port 4000")
     dbConnect.dbConnection();
-});
+}); 
 
 module.exports = app

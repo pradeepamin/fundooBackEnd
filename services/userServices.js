@@ -40,6 +40,8 @@ exports.register = (req, callback) => {
 exports.login = (req, callback) => {
     userModel.USERS.findOne({ "email": req.body.email }, (err, data) => {
         if (data) {
+            console.log(("DATA PASSWORD_------>",data));
+            
             bcrypt.compare(req.body.password, data.password, (err, sucess) => {
                 if (sucess)
                     callback(null, data);

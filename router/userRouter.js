@@ -15,7 +15,7 @@ router.post('/forgotPassword',userController.forgotPassword)
 router.post('/resetPassword/:token',tokenRec.verify,userController.resetPassword)
 router.post('/image-upload',userToken.userVerify, (req,res,next)=>{
      singleUpload(req, res, (err) => {         
-            console.log("req.file", req.file);                          
+            console.log("req.file------------>", req.file);                          
             const imageURL = req.file.location;
             req.imageURL=imageURL;
             next();

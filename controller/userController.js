@@ -2,6 +2,7 @@ const userServices = require('../services/userServices')
 const tokenGenerate = require('../helper/token');
 const nodemailer = require('../helper/nodeMailer');
 require('dotenv').config();
+const rediscache = require('../helper/redisCache')
 
 /**
  * @desc Gets the input from front end filters and performs validation  
@@ -63,16 +64,37 @@ exports.login = (req, res) => {
 
                 response.sucess = true;
                 let data1 = []
-                data1.push(tokenGenerate.generateToken({
+                let newToken = tokenGenerate.generateToken({
                     "email": req.body.email,
                     "id": data._id
                 })
-                )
-                console.log("Only generated token--->",data1);
+                let value = newToken.token;
+                data1.push(newToken);
                 data1.push(data)
-                console.log(" generated token with paste login data--->",data1);
-                response.data=data1
+                console.log("Generated token with paste login data--->",data1);
+                response.data = data1
                 res.status(200).send(response);
+
+                rediscache.setRedis(value, (err, data) => {
+                    if (data) {
+                        console.log("RedisCache connection set")
+                    } else {
+                        console.log("Error in settting");
+                    }
+                })
+
+                // rediscache.getRedis((err, data) => {
+                //     if (data) {
+                //         console.log("Redis Data", data)
+                //     } else {
+                //         console.log("get set Error", err);
+                //     }
+                // });
+
+
+
+
+                
             }
         })
     }
@@ -95,6 +117,7 @@ exports.forgotPassword = (req, res) => {
                 response.data = err;
                 res.status(404).send(response);
             } else {
+
                 let payload = data._id;
                 let obj = tokenGenerate.generateToken(payload);
                 console.log("Token in contoller-->env,", process.env.URL)
@@ -143,19 +166,19 @@ exports.resetPassword = (req, res) => {
 
 
 exports.imageUpload = (req, res) => {
-    console.log("image url-->",req.imageURL);
+    console.log("image url-->", req.imageURL);
     // console.log("req to check image-->",req);
-    const imageURL=req.imageURL;
-    var response={}
-    userServices.imageUpload(req,imageURL,(err,result)=>{
-        if(err){
+    const imageURL = req.imageURL;
+    var response = {}
+    userServices.imageUpload(req, imageURL, (err, result) => {
+        if (err) {
             console.log("error");
-            response.err=err;
+            response.err = err;
             res.status(404).send(response);
-        }else{
+        } else {
             console.log("result");
-            response.result=result;
-            response.imageUrl=imageURL;
+            response.result = result;
+            response.imageUrl = imageURL;
             res.status(200).send(response)
         }
     })
