@@ -25,7 +25,7 @@ exports.addUser = (req) => {
 exports.getAllNote = (req) => {
     console.log("req in get all notes------------->", req);
     return new Promise((resolve, reject) => {
-        noteModel.notes.find({ _userId: req.decoded.payload.id, isDeleted: false }, (err, result) => {
+        noteModel.notes.find({ _userId: req.decoded.payload.id, isDeleted: false, isArchive:false }, (err, result) => {
             if (err) {
                 reject(err)
             } else {
@@ -61,16 +61,19 @@ exports.updateNote = (req) => {
         })
     })
 }
-
+/*
+"noteId":"",
+"collaboratorID":""
+*/
 exports.addCollaborator = async (req) => {
     return await new Promise((resolve, reject) => {
-    
+
         if (req.decoded.payload.id != req.body.collaboratorId) {
 
             collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, (err, data) => {
                 if (err || data == null) {
                     let newCollaborator = new collaboratorModel.COLLABORATOR({
-                        "_userId": verfifedPayload,
+                        "_userId": req.decoded.payload.id,
                         "noteId": req.body.noteId,
                         "collaboratorId": req.body.collaboratorId
                     })
@@ -106,6 +109,84 @@ exports.addCollaborator = async (req) => {
         }
     })
 }
+/*
+"noteId":"",
+*/
+exports.getCollaborator = async (req, res) => {
+
+    return await new Promise((resolve, reject) => {
+        collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, (err, data) => {
+            if (data) {
+                let getOnlyCollaborator = data.collaboratorId;
+                resolve(getOnlyCollaborator)
+            } else {
+                reject("Note id not found", err)
+            }
+        })
+    })
+}
+
+/*
+"noteId":"",
+"collaboratorID":""
+*/
+exports.deleteCollaborator = (req, res) => {
+    return new Promise((resolve, reject) => {
+        //this function is used only to fetch data and view
+        collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, (err, data) => {
+            console.log("data--->", data.collaboratorId);
+
+            if (data.collaboratorId.includes(req.body.collaboratorId)) {
+                //this function is used to remove the given collaborator id from the list
+                collaboratorModel.COLLABORATOR.updateOne({ "noteId": req.body.noteId },
+                    { $pull: { "collaboratorId": req.body.collaboratorId } }, (err, data) => {
+                        if (data) {
+                            resolve(data)
+                        } else {
+                            reject(err)
+                        }
+                    })
+            } else {
+                reject("Given user not in the collaborator list", err)
+            }
+
+        })
+
+    })
+}
+
+exports.archiveNote = (req) => {
+   console.log("req----->",req);
+   
+    return new Promise((resolve, reject) => {
+        noteModel.notes.findByIdAndUpdate({ _id: req.body.noteId }, { isArchive: true }, (err, result) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(result)
+
+            }
+        })
+
+    })
+}
+
+exports.unarchiveNote = (req) => {
+    console.log("req----->",req);
+    
+     return new Promise((resolve, reject) => {
+         noteModel.notes.findByIdAndUpdate({ _id: req.body.noteId }, { isArchive: false }, (err, result) => {
+             if (err) {
+                 reject(err)
+             } else {
+                 resolve(result)
+ 
+             }
+         })
+ 
+     })
+ }
+
 
 
 
