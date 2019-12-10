@@ -10,6 +10,11 @@ router.put('/deleteNote',noteVerify.userVerify,noteController.deleteNote);
 router.put('/updateNote',noteVerify.userVerify,noteController.updateNote);
 
 router.post('/addCollaborator',noteVerify.userVerify,noteController.addCollaborator);
+router.get('/getCollaborator',noteVerify.userVerify,noteController.getCollaborator);
+router.delete('/deleteCollaborator',noteVerify.userVerify,noteController.deleteCollaborator)
+
+router.put('/archiveNote',noteVerify.userVerify,noteController.archiveNote);
+router.put('/unarchiveNote',noteVerify.userVerify,noteController.unarchiveNote)
 
 module.exports=router;
 

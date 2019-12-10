@@ -105,8 +105,6 @@ exports.addCollaborator=(req,res)=>{
     
    
     let response={};
-   
-    
         noteService.addCollaborator(req)
         .then((data)=>{
             response.sucess=true
