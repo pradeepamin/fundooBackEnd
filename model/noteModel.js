@@ -23,6 +23,10 @@ const fundoNotes = new Schema({
         type: Boolean,
         default: false
     },
+    isArchive:{
+        type: Boolean,
+        default: false
+    },
   
 
 },

@@ -43,8 +43,11 @@ exports.verify = (req, res, next) => {
 
 exports.userVerify = (req, res, next) => {
     console.log("verifies request");
+
     runnerRedis.getRedis((err, data) => {
+
         let newData = data.substring(1, data.length - 1);
+        
         jwt.verify(newData, process.env.KEY, (err, result) => {
             if (err) res.status(422).send({ message: "token is incorrect" });
             else {

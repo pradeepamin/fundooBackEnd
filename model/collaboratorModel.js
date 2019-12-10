@@ -13,7 +13,7 @@ const addCollaborator = new Schema({
         required: true
     },
     collaboratorId: {
-        type: [mongoose.Schema.Types.ObjectId],                     //Array,                  //[mongoose.Types.ObjectId], //type: Array,
+        type: [mongoose.Schema.Types.ObjectId],                    
         required: true,
         ref:"user"
    
