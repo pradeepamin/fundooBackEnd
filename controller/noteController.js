@@ -100,10 +100,6 @@ exports.updateNote = (req, res) => {
 }
 
 exports.addCollaborator=(req,res)=>{
-//    console.log("RQQ---------->",req);
-   
-    
-   
     let response={};
         noteService.addCollaborator(req)
         .then((data)=>{
@@ -116,6 +112,70 @@ exports.addCollaborator=(req,res)=>{
             res.status(500).send(response);
         })
 }
+
+exports.getCollaborator=(req,res)=>{
+    let response={};
+    noteService.getCollaborator(req)
+    .then((data)=>{
+        response.sucess=true;
+        response.data=data;
+        res.status(200).send(response)
+    })
+    .catch((err)=>{
+        response.sucess=false
+        response.data=err;
+        res.status(500).send(response)
+    })
+}
+
+exports.deleteCollaborator=(req,res)=>{
+    let response={};
+    noteService.deleteCollaborator(req)
+    .then((data)=>{
+        response.sucess=true;
+        response.data=data;
+        res.status(200).send(response)
+    })
+    .catch((err)=>{
+        response.sucess=false
+        response.data=err;
+        res.status(500).send(response)
+    })
+}
+
+exports.archiveNote=(req,res)=>{
+    // req.checkBody("noteId","invalid note if").notEmpty();
+    let response={};
+    noteService.archiveNote(req)
+    .then((data)=>{
+        response.sucess=true;
+        response.data=data;
+        res.status(200).send(response)
+    })
+    .catch((err)=>{
+        response.sucess=false
+        response.data=err;
+        res.status(500).send(response)
+    })
+}
+
+
+
+exports.unarchiveNote=(req,res)=>{
+    let response={};
+    noteService.unarchiveNote(req)
+    .then((data)=>{
+        response.sucess=true;
+        response.data=data;
+        res.status(200).send(response)
+    })
+    .catch((err)=>{
+        response.sucess=false
+        response.data=err;
+        res.status(500).send(response)
+    })
+}
+
 
 
 
