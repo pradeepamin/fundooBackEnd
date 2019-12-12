@@ -3,7 +3,6 @@ const noteVerify=require('../helper/token')
 const express=require('express');
 const router=express.Router();
 
-
 router.post('/addNote',noteVerify.userVerify,noteController.addNote);
 router.get('/getAllNote',noteVerify.userVerify,noteController.getAllNote);
 router.put('/deleteNote',noteVerify.userVerify,noteController.deleteNote);
@@ -15,6 +14,9 @@ router.delete('/deleteCollaborator',noteVerify.userVerify,noteController.deleteC
 
 router.put('/archiveNote',noteVerify.userVerify,noteController.archiveNote);
 router.put('/unarchiveNote',noteVerify.userVerify,noteController.unarchiveNote)
+
+router.post('/addReminder',noteVerify.userVerify,noteController.addReminder)
+router.put('/deleteReminder',noteVerify.userVerify,noteController.deleteReminder)
 
 module.exports=router;
 
