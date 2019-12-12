@@ -176,6 +176,38 @@ exports.unarchiveNote=(req,res)=>{
     })
 }
 
+exports.addReminder=(req,res)=>{
+    // console.log("In con",req);
+    
+    let response={};
+    noteService.addReminder(req)
+    .then((data)=>{
+        response.sucess=true;
+        response.data=data;
+        res.status(200).send(response)
+    })
+    .catch((err)=>{
+        response.sucess=false
+        response.data=err;
+        res.status(500).send(response)
+    })
+}
 
 
+exports.deleteReminder=(req,res)=>{
+    // console.log("In con",req);
+    
+    let response={};
+    noteService.deleteReminder(req)
+    .then((data)=>{
+        response.sucess=true;
+        response.data=data;
+        res.status(200).send(response)
+    })
+    .catch((err)=>{
+        response.sucess=false
+        response.data=err;
+        res.status(500).send(response)
+    })
+}
 
