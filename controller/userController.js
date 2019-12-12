@@ -61,7 +61,6 @@ exports.login = (req, res) => {
 
                 res.status(404).send(response);
             } else {
-
                 response.sucess = true;
                 let data1 = []
                 let newToken = tokenGenerate.generateToken({
@@ -76,7 +75,8 @@ exports.login = (req, res) => {
                 console.log("Generated token with paste login data--->", data1);
                 response.data = data1
                 res.status(200).send(response);
-
+                
+                //Setting token values in redis cache
                 rediscache.setRedis(value, (err, data) => {
                     if (data) {
                         console.log("RedisCache connection set")
@@ -114,7 +114,6 @@ exports.forgotPassword = (req, res) => {
                 console.log("controller Payload------>>>", url);
                 console.log("Email id", req.body.email);
 
-
                 nodemailer.sendMail(url, req.body.email)
                 response.sucess = true;
                 response.data = data;
@@ -122,7 +121,6 @@ exports.forgotPassword = (req, res) => {
             }
         })
     }
-
 }
 exports.resetPassword = (req, res) => {
     console.log(("only request",req));
@@ -155,8 +153,6 @@ exports.resetPassword = (req, res) => {
 }
 
 exports.imageUpload = (req, res) => {
-    // console.log(("only request",req));
-    
     const imageURL = req.file.location;
     var response = {}
     userServices.imageUpload(req, imageURL, (err, result) => {
