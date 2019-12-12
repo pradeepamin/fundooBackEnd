@@ -1,6 +1,7 @@
 
 const noteModel = require('../model/noteModel');
 const collaboratorModel = require('../model/collaboratorModel');
+const cacheNote = require('../helper/redisCache')
 
 
 exports.addUser = (req) => {
@@ -18,23 +19,45 @@ exports.addUser = (req) => {
             } else {
                 reject(err);
             }
+            cacheNote.delRedisNote(req.decoded.payload.id)
+           
         })
     })
 }
 
 exports.getAllNote = (req) => {
-    console.log("req in get all notes------------->", req);
+
     return new Promise((resolve, reject) => {
-        noteModel.notes.find({ _userId: req.decoded.payload.id, isDeleted: false, isArchive:false }, (err, result) => {
-            if (err) {
-                reject(err)
-            } else {
-                resolve(result)
-            }
-        })
+        cacheNote.getRedisNote(req.decoded.payload.id, (err, data) => {
+            if (data)
+            resolve(data),
+            console.log("Data in cache");
+            else {
 
+                noteModel.notes.find({ _userId: req.decoded.payload.id, isDeleted: false, isArchive: false }, (err, result) => {
+                    if (err) {
+                        reject(err)
+                    } else {
+                        resolve(result)
+                        console.log("resullt-->", result);
+                        let valueCache={};
+                        valueCache.id=req.decoded.payload.id;
+                        valueCache.result=result;
+                        cacheNote.setRedisNote(valueCache,(err,data)=>{
+                            if(data){
+                                console.log("seted to cache");
+                                
+                            }else{
+                                console.log("not set in cache");
+                                
+                            }
+                        })
+                    }
+                })
+             }
+
+         })
     })
-
 }
 
 exports.deleteNote = (req) => {
@@ -51,7 +74,6 @@ exports.deleteNote = (req) => {
 
     })
 }
-
 
 exports.updateNote = (req) => {
     return new Promise((resolve, reject) => {
@@ -156,8 +178,8 @@ exports.deleteCollaborator = (req, res) => {
 }
 
 exports.archiveNote = (req) => {
-   console.log("req----->",req);
-   
+    console.log("req----->", req);
+
     return new Promise((resolve, reject) => {
         noteModel.notes.findByIdAndUpdate({ _id: req.body.noteId }, { isArchive: true }, (err, result) => {
             if (err) {
@@ -172,21 +194,47 @@ exports.archiveNote = (req) => {
 }
 
 exports.unarchiveNote = (req) => {
-    console.log("req----->",req);
-    
-     return new Promise((resolve, reject) => {
-         noteModel.notes.findByIdAndUpdate({ _id: req.body.noteId }, { isArchive: false }, (err, result) => {
-             if (err) {
-                 reject(err)
-             } else {
-                 resolve(result)
- 
-             }
-         })
- 
-     })
- }
+    // console.log("req----->",req);
+
+    return new Promise((resolve, reject) => {
+        noteModel.notes.findByIdAndUpdate({ _id: req.body.noteId }, { isArchive: false }, (err, result) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(result)
+
+            }
+        })
+
+    })
+}
+
+exports.addReminder = (req) => {
+    return new Promise((resolve, reject) => {
+        noteModel.notes.findOneAndUpdate({ _id: req.body.noteId }, { reminder: req.body.reminder }, (err, result) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(result)
+
+            }
+        })
+
+    })
+}
 
 
+exports.deleteReminder = (req) => {
+    return new Promise((resolve, reject) => {
+        noteModel.notes.updateOne({ _id: req.body.noteId }, { $unset: { reminder: "" } }, (err, result) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(result)
 
+            }
+        })
+
+    })
+}
 
