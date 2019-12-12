@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+mongoose.set('useFindAndModify', false);
 
 /*creating a schema of database*/
 var Schema = mongoose.Schema
@@ -26,6 +26,9 @@ const fundoNotes = new Schema({
     isArchive:{
         type: Boolean,
         default: false
+    },
+    reminder:{
+        type:Date
     },
   
 
