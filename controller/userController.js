@@ -84,19 +84,6 @@ exports.login = (req, res) => {
                         console.log("Error in settting");
                     }
                 })
-
-                // r ediscache.getRedis((err, data) => {
-                //     if (data) {
-                //         console.log("Redis Data", data)
-                //     } else {
-                //         console.log("get set Error", err);
-                //     }
-                // });
-
-
-
-
-
             }
         })
     }
