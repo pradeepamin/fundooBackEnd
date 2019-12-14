@@ -17,6 +17,8 @@ const routerNote=require('./router/noteRouter')
 const dbConnect=require('../server/configuration/dbConfig')
 const expressValidator=require('express-validator');
 require('dotenv').config()
+
+
 const app=express();
 app.use(cors());
 
@@ -33,5 +35,11 @@ app.listen(process.env.PORT, () => {
     console.log("Server is listing on port 4000")
     dbConnect.dbConnection();
 }); 
+
+// var schedule = require('node-schedule');
+ 
+// var j = schedule.scheduleJob('* /1 * * * *', function(){
+//   console.log('The answer to life, the universe, and everything!');
+// });
 
 module.exports = app

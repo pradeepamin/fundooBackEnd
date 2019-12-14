@@ -1,4 +1,5 @@
 const noteController=require('../controller/noteController');
+const elasticSearch=require('../helper/elasticSearch')
 const noteVerify=require('../helper/token')
 const express=require('express');
 const router=express.Router();
@@ -17,6 +18,9 @@ router.put('/unarchiveNote',noteVerify.userVerify,noteController.unarchiveNote)
 
 router.post('/addReminder',noteVerify.userVerify,noteController.addReminder)
 router.put('/deleteReminder',noteVerify.userVerify,noteController.deleteReminder)
+
+router.post('/createIndex',noteVerify.userVerify,elasticSearch.createIndex)    
+
 
 module.exports=router;
 

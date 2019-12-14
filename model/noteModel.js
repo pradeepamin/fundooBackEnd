@@ -30,6 +30,9 @@ const fundoNotes = new Schema({
     reminder:{
         type:Date
     },
+    "index":{
+        type:Number
+    },
   
 
 },

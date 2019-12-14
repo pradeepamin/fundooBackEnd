@@ -18,7 +18,7 @@ exports.addNote = (req, res) => {
         console.log("Response", response)
     } else {
         console.log("Req body---->", req.body)
-        noteService.addUser(req)
+        noteService.addNote(req)
             .then((data) => {
 
                 console.log("In conttoller");
@@ -36,7 +36,6 @@ exports.addNote = (req, res) => {
 
     }
 }
-
 exports.getAllNote = (req, res) => {
 
     let response = {};

@@ -15,6 +15,7 @@ dbConnection = () => {
         console.log("Could not connect to the database ");
         process.exit();
     })
+
     mongoose.connection.on("error", () => {
         console.log("Error in Connecting to Database");
         process.exit(1)
