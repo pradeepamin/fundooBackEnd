@@ -3,7 +3,8 @@ const noteModel = require('../model/noteModel');
 const collaboratorModel = require('../model/collaboratorModel');
 const cacheNote = require('../helper/redisCache')
 
- const elasticSearch=require('../helper/elasticSearch')
+//  const elasticSearch=require('../helper/elasticSearch')
+const elastic = require('../helper/elasticSearch1')
 
 
 exports.addNote = (req) => {
@@ -22,7 +23,7 @@ exports.addNote = (req) => {
                 reject(err);
             }
             cacheNote.delRedisNote(req.decoded.payload.id)
-           
+
         })
     })
 }
@@ -32,40 +33,47 @@ exports.getAllNote = (req) => {
     return new Promise((resolve, reject) => {
         cacheNote.getRedisNote(req.decoded.payload.id, (err, data) => {
             if (data)
-            resolve(data),
-            console.log("data in eggg------>",data),
-            
-            elasticSearch.addDocument(data),
-            console.log("Data in cache");
-            
+                resolve(data),
+                    // console.log("data in eggg------>",data),
+
+                    elastic.addDocument(data),
+                    console.log("Data in cache");
+
             else {
 
                 noteModel.notes.find({ _userId: req.decoded.payload.id, isDeleted: false, isArchive: false }, (err, result) => {
                     if (err) {
                         reject(err)
                     } else {
-                        resolve(result)
-                        // elasticSearch.createIndex(result)
-                        console.log("resullt-->", result);
-                        let valueCache={};
-                        valueCache.id=req.decoded.payload.id;
-                        valueCache.result=result;
-                        cacheNote.setRedisNote(valueCache,(err,data)=>{
-                            if(data){
-                               
-                                
-                                console.log("seted to cache");
-                                
-                            }else{
-                                console.log("not set in cache");
-                                
-                            }
-                        })
+                        if (!result.length == 0) {
+                            resolve(result)
+                            console.log("resullt-->", result);
+
+                            let valueCache = {};
+                            valueCache.id = req.decoded.payload.id;
+                            valueCache.result = result;
+                            cacheNote.setRedisNote(valueCache, (err, data) => {
+                                //  elastic.createIndex(data)
+                                if (data) {
+
+                                    console.log("seted to cache");
+
+                                } else {
+                                    console.log("not set in cache");
+
+                                }
+                            })
+                        } else {
+                            console.log("NO Notes");
+                            reject("No Notes")
+
+                        }
+
                     }
                 })
-             }
+            }
 
-         })
+        })
     })
 }
 
