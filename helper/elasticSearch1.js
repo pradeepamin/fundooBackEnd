@@ -5,12 +5,9 @@ const client = new elasticsearch.Client({
     hosts: ['http://127.0.0.1:9200/']
 });
 
-
 exports.createIndex = (req, callback) => {
 
-
     let index = req.decoded.payload.id
-    console.log("INDEX_----------->", index);
     client.indices.exists({ index: index }, (err, data) => {
         if (data) {
             console.log("exitss-->");
@@ -34,12 +31,10 @@ exports.createIndex = (req, callback) => {
 //GetData from when we run getALLNote
 exports.addDocument = (note) => {
     let array = [];
-    console.log("data in addDoc file", note);
     note.forEach(element => {
         console.log(element);
         array.push({
             index: {
-
                 _index: element._userId,
                 _type: "notes"
             }
@@ -66,11 +61,6 @@ exports.addDocument = (note) => {
 }
 
 exports.elasticSearch = (req, callback) => {
-
-
-
-    console.log("search", req.body);
-
     let body = {
         query: {
             query_string: {
@@ -90,6 +80,5 @@ exports.elasticSearch = (req, callback) => {
 
         }
     })
-
 }
 

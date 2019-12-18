@@ -2,10 +2,7 @@
 const noteModel = require('../model/noteModel');
 const collaboratorModel = require('../model/collaboratorModel');
 const cacheNote = require('../helper/redisCache')
-
-//  const elasticSearch=require('../helper/elasticSearch')
 const elastic = require('../helper/elasticSearch1')
-
 
 exports.addNote = (req) => {
     console.log(req.body);
