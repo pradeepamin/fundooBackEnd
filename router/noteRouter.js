@@ -23,6 +23,17 @@ router.put('/deleteReminder',noteVerify.userVerify,noteController.deleteReminder
 router.post('/createIndex',noteVerify.userVerify,elasticController.createIndex)    
 router.post('/elasticSearch',noteVerify.userVerify,elasticController.elasticSearch)
 
+router.post('/createLabel',noteVerify.userVerify,noteController.createLabel)
+router.put('/updateLabel',noteVerify.userVerify,noteController.updateLabel)
+router.get('/getAllLabel',noteVerify.userVerify,noteController.getAllLabel)
+router.delete('/deleteLabel',noteVerify.userVerify,noteController.deleteLabel)
+
+router.put('/noteLabel',noteVerify.userVerify,noteController.noteLabel)
+router.put('/noteLabelUndo',noteVerify.userVerify,noteController.noteLabelUndo)
+
+router.post('/popEx',noteVerify.userVerify,noteController.popEx)
+router.get('/popEx1',noteVerify.userVerify,noteController.popEx1)
+
 
 module.exports=router;
 

@@ -33,6 +33,11 @@ const fundoNotes = new Schema({
     "index":{
         type:Number
     },
+    "labels":{
+        type:[mongoose.Schema.Types.ObjectId],
+        ref:"label"
+
+    },
   
 
 },
