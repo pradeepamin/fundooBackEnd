@@ -13,8 +13,7 @@ exports.scheduleReminder = (req) => {
         var date = new Date(2019, 11, 18, 19, 25, 0);
 
         var j = schedule.scheduleJob(date, function () {
-            console.log('The world is going to end today.');
-
+    
                 console.log("true");
                 const arr={
 
