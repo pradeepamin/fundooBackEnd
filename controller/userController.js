@@ -12,32 +12,37 @@ const rediscache = require('../helper/redisCache')
  */
 exports.register = (req, res) => {
     try {
-        req.checkBody('firstName', 'firstname is invalid').notEmpty().isAlpha();
-        req.checkBody('lastName', 'lastname is invalid').notEmpty().isAlpha();
-        req.checkBody('email', 'email is invalid').notEmpty().isEmail();
-        req.checkBody('password', 'password is invalid').notEmpty().len(6, 10);
-        req.checkBody('confirmPassword', 'Confirm password is incorrect').notEmpty().len(6, 10).equals(req.body.password);
-        var error = req.validationErrors();
+        // req.checkBody('firstName', 'firstname is invalid').notEmpty().isAlpha();
+        // req.checkBody('lastName', 'lastname is invalid').notEmpty().isAlpha();
+        // req.checkBody('email', 'email is invalid').notEmpty().isEmail();
+        // req.checkBody('password', 'password is invalid').notEmpty().len(6, 10);
+        // req.checkBody('confirmPassword', 'Confirm password is incorrect').notEmpty().len(6, 10).equals(req.body.password);
+        // var error = req.validationErrors();
         var response = {};
-        if (error) {
-            response.error = error;
-            response.sucess = false;
-            res.status(422).send(response);
-            console.log("error-register", error);
-            console.log("Response", response)
-        } else {
+        // if (error) {
+        //     response.error = error;
+        //     response.sucess = false;
+        //     res.status(422).send(response);
+        //     console.log("error-register", error);
+        //     console.log("Response", response)
+        // } else {
+        
             userServices.register(req, (err, data) => {
                 if (err) {
+                    console.log("Login err-->", err)
                     response.sucessss = false;
                     response.data = err;
                     res.status(500).send(response);
                 } else {
+                    console.log("Login data-->", data)
                     response.sucess = true;
                     response.data = data;
                     res.status(200).send(response);
+                   
+                    
                 }
             })
-        }
+        
     } catch (e) {
         console.log(e);
     }
@@ -106,18 +111,21 @@ exports.forgotPassword = (req, res) => {
                 response.data = err;
                 res.status(404).send(response);
             } else {
-
+                let data1 = []
                 let payload = data._id;
                 let obj = tokenGenerate.generateToken(payload);
                 console.log("Token in contoller-->env,", process.env.URL)
                 let url = `${process.env.URL}${obj.token}`
+               data1.push(url)
+               data1.push(data)
                 console.log("controller Payload------>>>", url);
                 console.log("Email id", req.body.email);
 
                 nodemailer.sendMail(url, req.body.email)
                 response.sucess = true;
-                response.data = data;
+                response.data = data1;
                 res.status(200).send(response);
+                console.log("data in controller--->",data1);
             }
         })
     }
@@ -146,6 +154,8 @@ exports.resetPassword = (req, res) => {
                 } else {
                     response.data = data;
                     res.status(200).send(response)
+                    console.log("data in controller--->",data);
+                    
                 }
             })
         }

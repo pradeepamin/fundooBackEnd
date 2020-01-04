@@ -68,6 +68,8 @@ exports.deleteNote = (req, res) => {
             response.sucess = true;
             response.data = data;
             res.status(200).send(response);
+            console.log("data from deleteNote-->",data);
+            
         })
         .catch((err) => {
             response.sucess = false;
@@ -98,7 +100,37 @@ exports.updateNote = (req, res) => {
             response.data = err;
             res.status(500).send(response);
         })
+} 
+exports.getDeleteNote = (req, res) => {
+    let response = {};
+    noteService.getDeleteNote(req)
+        .then((data) => {
+            response.sucess = true;
+            response.data = data;
+            res.status(200).send(response);
+        })
+        .catch((err) => {
+            response.sucess = false;
+            response.data = err;
+            res.status(500).send(response);
+        })
+} 
+exports.unDeleteNote = (req, res) => {
+    let response = {};
+    noteService.unDeleteNote(req)
+        .then((data) => {
+            response.sucess = true;
+            response.data = data;
+            res.status(200).send(response);
+        })
+        .catch((err) => {
+            response.sucess = false;
+            response.data = err;
+            res.status(500).send(response);
+        })
 }
+ 
+
 
 exports.addCollaborator = (req, res) => {
     let response = {};
@@ -165,6 +197,21 @@ exports.archiveNote = (req, res) => {
 exports.unarchiveNote = (req, res) => {
     let response = {};
     noteService.unarchiveNote(req)
+        .then((data) => {
+            response.sucess = true;
+            response.data = data;
+            res.status(200).send(response)
+        })
+        .catch((err) => {
+            response.sucess = false
+            response.data = err;
+            res.status(500).send(response)
+        })
+}
+
+exports.getArchiveNote = (req, res) => {
+    let response = {};
+    noteService.getArchiveNote(req)
         .then((data) => {
             response.sucess = true;
             response.data = data;
@@ -350,6 +397,49 @@ exports.noteLabelUndo = (req, res) => {
             })
         }
 } 
+exports.noteColor = (req, res) => {
+    
+    var error = req.validationErrors();
+    var response = {};
+    if (error) {
+        response.error = error;
+        response.sucess = false;
+        res.status(422).send(response);
+      
+    } else {
+    
+        noteService.noteColor(req)
+            .then((data) => {
+                response.sucess = true;
+                response.data = data
+                res.status(200).send(response)
+                console.log(response);
+
+            })
+            .catch((err) => {
+                response.sucess = false;
+                response.err = err
+                res.status(404).send(response)
+            })
+        }
+} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 exports.popEx = (req, res) => {
    let response={};

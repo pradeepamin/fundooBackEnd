@@ -28,7 +28,8 @@ const fundoNotes = new Schema({
         default: false
     },
     reminder:{
-        type:Date
+        // type:Date
+        type:String
     },
     "index":{
         type:Number
@@ -36,6 +37,11 @@ const fundoNotes = new Schema({
     "labels":{
         type:[mongoose.Schema.Types.ObjectId],
         ref:"label"
+
+    },
+    "noteColor":{
+        type:String
+       
 
     },
   

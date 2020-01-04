@@ -7,7 +7,7 @@ exports.notification = (details) => {
 
     console.log("notification", details.name);
 
-    AWS.config.getCredentials(function (err) {
+    AWS.config.getCredentials( (err)=> {
         if (err) console.log(err.stack);
         // credentials not loaded
         else {

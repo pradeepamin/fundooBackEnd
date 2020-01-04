@@ -11,7 +11,8 @@ exports.register = (req, callback) => {
  * @return return a call back function err or data
  */
     userModel.USERS.findOne({ "email": req.body.email }, (err, data) => {
-        if (data) callback("user exits");
+        if (data) callback("user exits")
+    
         else {
             emailExistance.check(req.body.email, (err, result) => {
 

@@ -9,7 +9,7 @@ const AWS = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 
-const accessKeyId = process.env.AWS_SECRET_ACCESS_KEY;
+const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
 const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 const Bucket = process.env.BUCKET_NAME;
 
@@ -22,6 +22,8 @@ AWS.config.update({
 const s3 = new AWS.S3();
 
 const fileFilter = (req, file, cb) => {
+  console.log("REQQ in multer--",req);
+  
 
   if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
       cb(null, true);

@@ -1,13 +1,13 @@
 
-const mongoose=require('mongoose')
+const mongoose = require('mongoose')
 const noteModel = require('../model/noteModel');
 const collaboratorModel = require('../model/collaboratorModel');
 const labelModel = require('../model/labelModel')
 const cacheNote = require('../helper/redisCache')
-const reminderSchedule=require('../helper/reminderScheduler')
+const reminderSchedule = require('../helper/reminderScheduler')
 // // const elastic = require('../helper/elasticSearch')
 
-const pop=require('../model/populate')
+const pop = require('../model/populate')
 
 exports.addNote = (req) => {
     try {
@@ -86,7 +86,34 @@ exports.deleteNote = (req) => {
                     reject(err)
                 } else {
                     resolve(result)
+                   
+                   
                 }
+                cacheNote.delRedisNote(req.decoded.payload.id)
+                console.log("Data delete from redies cache to update the archive");
+            
+            })
+
+        })
+    } catch (e) {
+        console.log(e);
+    }
+} //unDeleteNote
+
+exports.unDeleteNote = (req) => {
+    // console.log("req----->",req);
+    try {
+
+        return new Promise((resolve, reject) => {
+            noteModel.notes.findByIdAndUpdate({ _id: req.body.noteId }, { isDeleted: false }, (err, result) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result)
+
+                }
+                cacheNote.delRedisNote(req.decoded.payload.id)
+
             })
 
         })
@@ -94,6 +121,30 @@ exports.deleteNote = (req) => {
         console.log(e);
     }
 }
+
+
+//getDeleteNote
+exports.getDeleteNote = (req) => {
+
+    return new Promise((resolve, reject) => {
+
+        noteModel.notes.find({ _userId: req.decoded.payload.id, isDeleted: true, isArchive: false }, (err, result) => {
+            if (err) {
+                reject(err)
+            } else {
+                if (!result.length == 0) {  //this condition to check whether get note is empty or not
+                    resolve(result)
+                    console.log("resullt-->", result);
+
+                } else {
+                    console.log("NO Notes");
+                    reject("No Notes")
+                }
+            }
+        })
+    })
+}
+
 
 exports.updateNote = (req) => {
     try {
@@ -116,9 +167,9 @@ exports.updateNote = (req) => {
 "noteId":"",
 "collaboratorID":""
 */
-exports.addCollaborator = async (req) => {
+exports.addCollaborator = (req) => {
     try {
-        return await new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
             if (req.decoded.payload.id != req.body.collaboratorId) {
 
@@ -231,6 +282,10 @@ exports.archiveNote = (req) => {
                     resolve(result)
 
                 }
+                cacheNote.delRedisNote(req.decoded.payload.id)
+                console.log("Data delete from redies cache to update the archive");
+
+
             })
 
         })
@@ -251,13 +306,39 @@ exports.unarchiveNote = (req) => {
                     resolve(result)
 
                 }
+                cacheNote.delRedisNote(req.decoded.payload.id)
+
             })
 
         })
     } catch (e) {
         console.log(e);
     }
+} //getArchiveNote
+
+exports.getArchiveNote = (req) => {
+
+    return new Promise((resolve, reject) => {
+
+        noteModel.notes.find({ _userId: req.decoded.payload.id, isDeleted: false, isArchive: true }, (err, result) => {
+            if (err) {
+                reject(err)
+            } else {
+                if (!result.length == 0) {  //this condition to check whether get note is empty or not
+                    resolve(result)
+                    console.log("resullt-->", result);
+
+                } else {
+                    console.log("NO Notes");
+                    reject("No Notes")
+                }
+            }
+        })
+    })
 }
+
+
+
 
 exports.findNote = (req) => {
     try {
@@ -280,8 +361,8 @@ exports.addReminder = (req) => {
     try {
         let date = new Date(req.body.reminder)
         return new Promise((resolve, reject) => {
-        
-            noteModel.notes.findOneAndUpdate({ _id: req.body.noteId }, { reminder: date }, (err, result) => {
+
+            noteModel.notes.findOneAndUpdate({ _id: req.body.noteId }, { reminder: req.body.rem }, (err, result) => {
                 if (err) {
                     reject(err)
                 } else {
@@ -289,7 +370,7 @@ exports.addReminder = (req) => {
 
                 }
             })
-    })
+        })
     } catch (e) {
         console.log(e);
     }
@@ -317,169 +398,192 @@ exports.deleteReminder = (req) => {
 }
 
 exports.createLabel = (req) => {
-    try{
-    return new Promise((resolve, reject) => {
-        let lableDetails = new labelModel.LABELS({
-            labelName: req.body.labelName,
-            userId: req.decoded.payload.id
+    try {
+        return new Promise((resolve, reject) => {
+            let lableDetails = new labelModel.LABELS({
+                labelName: req.body.labelName,
+                userId: req.decoded.payload.id
+            })
+            lableDetails.save((err, data) => {
+                if (data) {
+                    resolve(data);
+                } else {
+                    reject(err);
+                }
+            })
         })
-        lableDetails.save((err, data) => {
+    } catch (e) {
+        console.log(e);
+    }
+}
+exports.updateLabel = (req) => {
+    try {
+        return new Promise((resolve, reject) => {
+            labelModel.LABELS.updateOne({ _id: req.body._id }, { labelName: req.body.labelName }, (err, data) => {
+                if (data) {
+                    resolve(data)
+                } else {
+                    reject(err)
+                }
+            })
+        })
+    } catch (e) {
+        console.log(e);
+    }
+}
+exports.getAllLabel = (req) => {
+    try {
+        return new Promise((resolve, reject) => {
+            labelModel.LABELS.find({ userId: req.decoded.payload.id }, (err, data) => {
+                if (data) {
+                    resolve(data)
+                } else {
+                    reject(err)
+                }
+            })
+
+        })
+    } catch (e) {
+        console.log(e);
+    }
+}
+exports.deleteLabel = (req) => {
+    try {
+        return new Promise((resolve, reject) => {
+            labelModel.LABELS.deleteMany({ _id: req.body.labelId }, (err, data) => {
+                if (data) {
+                    resolve(data)
+                } else {
+                    reject(err)
+                }
+            })
+
+        })
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+exports.noteLabel = (req) => {
+    try {
+        return new Promise((resolve, reject) => {
+            noteModel.notes.findById({ _id: req.body.noteId }, (err, data) => {
+
+                if (data.labels.includes(req.body.labelId)) reject("User already exits")
+                else {
+                    noteModel.notes.updateOne({ _id: req.body.noteId }, { $push: { labels: req.body.labelId } }, (err, data) => {
+                        if (data) {
+                            // console.log("updated", update);
+                            resolve(data)
+                        } else {
+                            reject(err)
+                        }
+                    })
+                }
+            })
+
+        })
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+exports.noteLabelUndo = (req) => {
+    try {
+        return new Promise((resolve, reject) => {
+            noteModel.notes.findById({ _id: req.body.noteId }, (err, data) => {
+
+                if (!data.labels.includes(req.body.labelId)) reject("LabelID is not available in note")
+                else {
+                    noteModel.notes.updateOne({ _id: req.body.noteId }, { $pull: { labels: req.body.labelId } }, (err, data) => {
+                        if (data) {
+                            // console.log("updated", update);
+                            resolve(data)
+                        } else {
+                            reject(err)
+                        }
+                    })
+                }
+            })
+
+        })
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+exports.noteColor=(req)=>{
+    return new Promise((resolve, reject) => {
+
+        noteModel.notes.findOneAndUpdate({ _id: req.body.noteId }, { noteColor: req.body.noteColor }, (err, result) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(result)
+
+            }
+            cacheNote.delRedisNote(req.decoded.payload.id)
+
+        })
+    })
+}
+
+
+
+
+
+
+
+
+exports.popEx = (req) => {
+    return new Promise((resolve, reject) => {
+        console.log("author");
+
+        let author = new pop.Person({
+            "_id": new mongoose.Types.ObjectId(),
+            "name": 'Ian Fleming',
+            "age": 50
+
+        })
+        author.save((err, data) => {
             if (data) {
                 resolve(data);
             } else {
                 reject(err);
             }
-        })
-    })
-} catch (e) {
-    console.log(e);
-}
-}
-exports.updateLabel = (req) => {
-    try{
-    return new Promise((resolve, reject) => {
-        labelModel.LABELS.updateOne({ _id: req.body._id }, { labelName: req.body.labelName }, (err, data) => {
-            if (data) {
-                resolve(data)
-            } else {
-                reject(err)
-            }
-        })
-    })
-} catch (e) {
-    console.log(e);
-}
-}
-exports.getAllLabel = (req) => {
-    try{
-    return new Promise((resolve, reject) => {
-        labelModel.LABELS.find({ userId: req.decoded.payload.id }, (err, data) => {
-            if (data) {
-                resolve(data)
-            } else {
-                reject(err)
-            }
-        })
+            console.log("Author id--->", author._id);
 
-    })
-} catch (e) {
-    console.log(e);
-}
-} 
-exports.deleteLabel = (req) => {
-    try{
-    return new Promise((resolve, reject) => {
-        labelModel.LABELS.deleteMany({ _id: req.body.labelId }, (err, data) => {
-            if (data) {
-                resolve(data)
-            } else {
-                reject(err)
-            }
-        })
-
-    })
-} catch (e) {
-    console.log(e);
-}
-}
-
-exports.noteLabel = (req) => {
-    try{
-    return new Promise((resolve, reject) => {
-        noteModel.notes.findById({ _id: req.body.noteId }, (err, data) => {
-
-            if (data.labels.includes(req.body.labelId)) reject("User already exits")
-            else {
-                noteModel.notes.updateOne({ _id: req.body.noteId }, { $push: { labels: req.body.labelId } }, (err, data) => {
-                    if (data) {
-                        // console.log("updated", update);
-                        resolve(data)
-                    } else {
-                        reject(err)
-                    }
-                })
-            }
-        })
-
-    })
-} catch (e) {
-    console.log(e);
-}
-}
-
-exports.noteLabelUndo = (req) => {
-    try{
-    return new Promise((resolve, reject) => {
-        noteModel.notes.findById({ _id: req.body.noteId }, (err, data) => {
-
-            if (!data.labels.includes(req.body.labelId)) reject("LabelID is not available in note")
-            else {
-                noteModel.notes.updateOne({ _id: req.body.noteId }, { $pull: { labels:req.body.labelId}  }, (err, data) => {
-                    if (data) {
-                        // console.log("updated", update);
-                        resolve(data)
-                    } else {
-                        reject(err)
-                    }
-                })
-            }
-        })
-
-    })
-} catch (e) {
-    console.log(e);
-}
-}
-
-exports.popEx=(req)=>{
-        return new Promise((resolve, reject) => {
-            console.log("author");
-            
-            let author = new pop.Person({
-                "_id":new mongoose.Types.ObjectId(),
-                "name": 'Ian Fleming',
-                "age": 50
-
-            })
-            author.save((err, data) => {
-                if (data) {
-                    resolve(data);
-                } else {
-                    reject(err);
-                }
-           console.log("Author id--->",author._id);
-           
             const story1 = new pop.Story({
                 title: 'Casino Royale',
-                author: author._id   
-              });
+                author: author._id
+            });
 
-              story1.save((err, data) => {
+            story1.save((err, data) => {
                 if (data) {
                     resolve(data);
                 } else {
                     reject(err);
                 }
 
-            }) 
+            })
         })
         console.log("populare");
-        })
+    })
 }
 
-exports.popEx1=(req)=>{
+exports.popEx1 = (req) => {
 
     return new Promise((resolve, reject) => {
         pop.Story.findOne({ title: 'Casino Royale' }).
-        populate('author').exec((err, story) =>{
-          if (err) {
-          reject(err);
-          }else{
-          console.log('The author is %s', story.author.name);
-          resolve(story);
-          
-          }
-        });
+            populate('author').exec((err, story) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    console.log('The author is %s', story.author.name);
+                    resolve(story);
+
+                }
+            });
 
     })
 }

@@ -47,6 +47,8 @@ exports.userVerify = (req, res, next) => {
     runnerRedis.getRedis((err, data) => {
 
         let newData = data.substring(1, data.length - 1);
+        console.log("Token in login redis cache-->",newData);
+        
         
         jwt.verify(newData, process.env.KEY, (err, result) => {
             if (err) res.status(422).send({ message: "token is incorrect" });
