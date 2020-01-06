@@ -174,7 +174,9 @@ exports.deleteCollaborator = (req, res) => {
             response.data = err;
             res.status(500).send(response)
         })
-}
+} 
+
+
 
 exports.archiveNote = (req, res) => {
     // req.checkBody("noteId","invalid note if").notEmpty();

@@ -178,3 +178,18 @@ exports.imageUpload = (req, res) => {
         }
     })
 }
+
+exports.getAllUser = (req, res) => {
+    let response = {};
+    userServices.getAllUser(req)
+        .then((data) => {
+            response.sucess = true;
+            response.data = data;
+            res.status(200).send(response)
+        })
+        .catch((err) => {
+            response.sucess = false
+            response.data = err;
+            res.status(500).send(response)
+        })
+}

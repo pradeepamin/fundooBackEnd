@@ -10,10 +10,15 @@ exports.scheduleReminder = (req) => {
          let date2 = new Date(req.reminder);
         // console.log("date--->",date);
 
-        var date = new Date(2020, 0, 04, 19, 03, 0);
-        var date1 = new Date(req.reminder);
-        console.log("date--->",date);
-        var j = schedule.scheduleJob(date, function () {
+        // var date = new Date(2020, 0, 06, 9, 50, 0);
+        
+    
+        // console.log("date in iso conversion--->",isoPost);        
+        // var date1 = new Date(req.reminder);
+
+        console.log("date--->",date2);
+
+        var j = schedule.scheduleJob(date2, function () {
             console.log('The world is going to end today.');
                 console.log("true");
                 const arr={

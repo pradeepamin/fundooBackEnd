@@ -5,6 +5,7 @@ const collaboratorModel = require('../model/collaboratorModel');
 const labelModel = require('../model/labelModel')
 const cacheNote = require('../helper/redisCache')
 const reminderSchedule = require('../helper/reminderScheduler')
+const userModel = require('../model/userModel')
 // // const elastic = require('../helper/elasticSearch')
 
 const pop = require('../model/populate')
@@ -86,12 +87,12 @@ exports.deleteNote = (req) => {
                     reject(err)
                 } else {
                     resolve(result)
-                   
-                   
+
+
                 }
                 cacheNote.delRedisNote(req.decoded.payload.id)
                 console.log("Data delete from redies cache to update the archive");
-            
+
             })
 
         })
@@ -167,75 +168,78 @@ exports.updateNote = (req) => {
 "noteId":"",
 "collaboratorID":""
 */
-exports.addCollaborator = (req) => {
-    try {
-        return new Promise((resolve, reject) => {
+// exports.addCollaborator = (req) => {
+//     try {
+//         return new Promise((resolve, reject) => {
 
-            if (req.decoded.payload.id != req.body.collaboratorId) {
 
-                collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, (err, data) => {
-                    if (err || data == null) {
-                        let newCollaborator = new collaboratorModel.COLLABORATOR({
-                            "_userId": req.decoded.payload.id,
-                            "noteId": req.body.noteId,
-                            "collaboratorId": req.body.collaboratorId
-                        })
-                        newCollaborator.save((err, data) => {
-                            if (data) {
-                                resolve(data);
+//             if (req.decoded.payload.id != req.body.collaboratorId) {
 
-                            } else {
-                                reject(err)
-                            }
-                        })
-                    }
-                    else {
-                        let arrayCollaborator = data.collaboratorId;
-                        //used fetch only disticnt value.
-                        if (arrayCollaborator.includes(req.body.collaboratorId)) {
-                            reject("User already exits")
 
-                        } else
-                            collaboratorModel.COLLABORATOR.updateOne({ "noteId": req.body.noteId },
-                                { $push: { "collaboratorId": req.body.collaboratorId } }, (err, data) => {
-                                    if (data) {
-                                        resolve(data)
-                                    } else {
-                                        reject(err)
-                                    }
-                                })
-                    }
-                })
+//                 collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, (err, data) => {
+//                     if (err || data == null) {
+//                         let newCollaborator = new collaboratorModel.COLLABORATOR({
+//                             "_userId": req.decoded.payload.id,
+//                             "noteId": req.body.noteId,
+//                             "collaboratorId": req.body.collaboratorId
+//                         })
+//                         newCollaborator.save((err, data) => {
+//                             if (data) {
+//                                 resolve(data);
 
-            } else {
-                console.log("This is your email id. Cannot be collaborate!");
-                reject("This is your email id. Cannot be collaborate!")
-            }
-        })
-    } catch (e) {
-        console.log(e);
-    }
-}
-/*
-"noteId":"",
-*/
-exports.getCollaborator = async (req, res) => {
-    try {
+//                             } else {
+//                                 reject(err)
+//                             }
+//                         })
+//                     }
+//                     else {
+//                         let arrayCollaborator = data.collaboratorId;
+//                         //used fetch only disticnt value.
+//                         if (arrayCollaborator.includes(req.body.collaboratorId)) {
+//                             reject("User already exits")
 
-        return await new Promise((resolve, reject) => {
-            collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, (err, data) => {
-                if (data) {
-                    let getOnlyCollaborator = data.collaboratorId;
-                    resolve(getOnlyCollaborator)
-                } else {
-                    reject("Note id not found", err)
-                }
-            })
-        })
-    } catch (e) {
-        console.log(e);
-    }
-}
+//                         } else
+//                             collaboratorModel.COLLABORATOR.updateOne({ "noteId": req.body.noteId },
+//                                 { $push: { "collaboratorId": req.body.collaboratorId } }, (err, data) => {
+//                                     if (data) {
+//                                         resolve(data)
+//                                     } else {
+//                                         reject(err)
+//                                     }
+//                                 })
+//                     }
+//                 })
+
+//             } else {
+//                 console.log("This is your email id. Cannot be collaborate!");
+//                 reject("This is your email id. Cannot be collaborate!")
+//             }
+//         })
+//     } catch (e) {
+//         console.log(e);
+//     }
+// }
+// /*
+// "noteId":"",
+// */
+// exports.getCollaborator = async (req, res) => {
+//     try {
+
+//         return await new Promise((resolve, reject) => {
+//             collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, (err, data) => {
+//                 if (data) {
+//                     // let getOnlyCollaborator = data.collaboratorId;
+//                     // let getOnlyCollaborator = data;
+//                     resolve(data)
+//                 } else {
+//                     reject("Note id not found", err)
+//                 }
+//             })
+//         })
+//     } catch (e) {
+//         console.log(e);
+//     }
+// }
 
 /*
 "noteId":"",
@@ -269,6 +273,7 @@ exports.deleteCollaborator = (req, res) => {
         console.log(e);
     }
 }
+
 
 exports.archiveNote = (req) => {
     try {
@@ -362,7 +367,7 @@ exports.addReminder = (req) => {
         let date = new Date(req.body.reminder)
         return new Promise((resolve, reject) => {
 
-            noteModel.notes.findOneAndUpdate({ _id: req.body.noteId }, { reminder: req.body.rem }, (err, result) => {
+            noteModel.notes.findOneAndUpdate({ _id: req.body.noteId }, { reminder: req.body.reminder }, (err, result) => {
                 if (err) {
                     reject(err)
                 } else {
@@ -512,7 +517,7 @@ exports.noteLabelUndo = (req) => {
     }
 }
 
-exports.noteColor=(req)=>{
+exports.noteColor = (req) => {
     return new Promise((resolve, reject) => {
 
         noteModel.notes.findOneAndUpdate({ _id: req.body.noteId }, { noteColor: req.body.noteColor }, (err, result) => {
@@ -587,3 +592,104 @@ exports.popEx1 = (req) => {
 
     })
 }
+
+exports.addCollaborator = (req) => {
+    try {
+        return new Promise((resolve, reject) => {
+
+
+            if (req.decoded.payload.id != req.body.collaboratorId) {
+
+
+                collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, (err, data) => {
+                    if (err || data == null) {
+                        let newCollaborator = new collaboratorModel.COLLABORATOR({
+                            "_id": new mongoose.Types.ObjectId(),
+                            "_userId": req.decoded.payload.id,
+                            "noteId": req.body.noteId,
+                            "collaboratorId": req.body.collaboratorId
+                        })
+                        newCollaborator.save((err, data) => {
+                            if (data) {
+                                resolve(data);
+
+                            } else {
+                                reject(err)
+                            }
+                        })
+                    }
+                    else {
+                        let arrayCollaborator = data.collaboratorId;
+                        //used fetch only disticnt value.
+                        if (arrayCollaborator.includes(req.body.collaboratorId)) {
+                            reject("User already exits")
+
+                        } else
+                            collaboratorModel.COLLABORATOR.updateOne({ "noteId": req.body.noteId },
+                                { $push: { "collaboratorId": req.body.collaboratorId } }, (err, data) => {
+                                    if (data) {
+                                        resolve(data)
+                                    } else {
+                                       
+                                        
+                                        reject(err)
+                                    }
+                                })
+                    }
+                })
+
+            } else {
+                console.log("This is your email id. Cannot be collaborate!");
+                reject("This is your email id. Cannot be collaborate!")
+            }
+        })
+    } catch (e) {
+        console.log(e);
+    }
+}
+/*
+"noteId":"",
+*/
+exports.getCollaborator = async (req, res) => {
+    try {
+
+        return await new Promise((resolve, reject) => {
+            collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, (err, data) => {
+                console.log("Note id to print", req.body.noteId );
+                
+                if (data) {
+                    console.log("datatta-->", data);
+
+                    let colId = data.collaboratorId;
+                    let collabArray = []
+                    
+                    colId.forEach(async (element) => {
+                        console.log(element);
+                    
+                        await userModel.USERS.aggregate([{ $match: { _id: element } }, { $group: { _id: { email: "$email", lastName: "$lastName", firstName: "$firstName" } } }]).then(data => {
+                            // console.log("getting all collab user name-->",data);
+                          collabArray.push(data[0])
+                            console.log("Final array ", collabArray);
+                        
+                            
+                        })
+                       
+                    });
+                  
+               
+                
+                    let ree={}
+                    ree.data=data;
+                    ree.coll=collabArray
+                    resolve(data)
+                } else {
+                    reject("Note id not found")
+                }
+            })
+        })
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+

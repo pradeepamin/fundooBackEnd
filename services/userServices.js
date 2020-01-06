@@ -2,7 +2,8 @@
 const userModel = require('../model/userModel')
 const emailExistance = require("email-existence");
 const bcrypt = require('bcrypt');
-
+const collaboratorModel = require('../model/collaboratorModel');
+const mongoose = require("mongoose");
 exports.register = (req, callback) => {
     /**
  * @desc Gets the input from front end and stores data in deatabase
@@ -12,7 +13,7 @@ exports.register = (req, callback) => {
  */
     userModel.USERS.findOne({ "email": req.body.email }, (err, data) => {
         if (data) callback("user exits")
-    
+
         else {
             emailExistance.check(req.body.email, (err, result) => {
 
@@ -20,6 +21,7 @@ exports.register = (req, callback) => {
                 else {
                     bcrypt.hash(req.body.password, 10, (err, encrypted) => {
                         var userDetails = new userModel.USERS({
+                            // "_id":new mongoose.Types.ObjectId(),
                             "firstName": req.body.firstName,
                             "lastName": req.body.lastName,
                             "email": req.body.email,
@@ -28,8 +30,26 @@ exports.register = (req, callback) => {
                         userDetails.save((err, data) => {
                             if (err) {
                                 callback(err);
-                            } else callback(null, data);
+                            } else {
+                                callback(null, data);
+                            }
+                            // console.log("Author id--->", userDetails._id);
+                            // const colab = new collaboratorModel.COLLABORATOR({
+                            //     title: 'Casino Royale',
+                            //     userId: userDetails._id
+                            // });
+                
+                            // colab.save((err, data) => {
+                            //     if (data) {
+                            //         resolve(data);
+                            //     } else {
+                            //         reject(err);
+                            //     }
+                
+                            // })
+
                         })
+
                     })
                 }
             })
@@ -41,8 +61,8 @@ exports.register = (req, callback) => {
 exports.login = (req, callback) => {
     userModel.USERS.findOne({ "email": req.body.email }, (err, data) => {
         if (data) {
-            console.log(("DATA PASSWORD_------>",data));
-            
+            console.log(("DATA PASSWORD_------>", data));
+
             bcrypt.compare(req.body.password, data.password, (err, sucess) => {
                 if (sucess)
                     callback(null, data);
@@ -77,21 +97,39 @@ exports.resetPassword = (req, callback) => {
     })
 }
 
-exports.imageUpload = (req, imageUrl,callback) => {
+exports.imageUpload = (req, imageUrl, callback) => {
 
-        console.log("user id", req.decoded.payload.id);
-        userModel.USERS.findOne({ "_id": req.decoded.payload.id }, (err, data) => {
+    console.log("user id", req.decoded.payload.id);
+    userModel.USERS.findOne({ "_id": req.decoded.payload.id }, (err, data) => {
+        if (err) {
+            callback(err);
+        } else {
+            userModel.USERS.updateOne({ "_id": req.decoded.payload.id }, { "imageUrl": imageUrl }, (err, data1) => {
+                if (err) {
+                    callback(err);
+                } else {
+                    console.log("data1", data1);
+                    callback(null, data1)
+                }
+            })
+        }
+    })
+}
+exports.getAllUser = (req) => {
+
+    return new Promise((resolve, reject) => {
+
+        userModel.USERS.find({}, (err, result) => {
             if (err) {
-                callback(err);
+                reject(err)
             } else {
-                userModel.USERS.updateOne({ "_id": req.decoded.payload.id }, { "imageUrl": imageUrl }, (err, data1) => {
-                    if (err) {
-                        callback(err);
-                    } else {
-                        console.log("data1",data1);
-                        callback(null,data1)
-                    }
-                })
+
+                resolve(result)
+                console.log("resullt-->", result);
+
             }
         })
+    })
+
 }
+
