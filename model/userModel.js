@@ -21,8 +21,8 @@ const usersData = new Schema({
         type: String,
         required: true
     },
-    imageUrl:{
-        type:String
+    imageUrl: {
+        type: String
     }
 },
     {
@@ -31,3 +31,4 @@ const usersData = new Schema({
 )
 
 exports.USERS = mongoose.model("users", usersData);
+

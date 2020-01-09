@@ -7,14 +7,16 @@ const router=express.Router();
 
 router.post('/addNote',noteVerify.userVerify,noteController.addNote);
 router.get('/getAllNote',noteVerify.userVerify,noteController.getAllNote);
+router.get('/getCollaboratorNote',noteVerify.userVerify,noteController.getCollaboratorNote);
 router.put('/deleteNote',noteVerify.userVerify,noteController.deleteNote);
 router.put('/updateNote',noteVerify.userVerify,noteController.updateNote);
 router.get('/getDeleteNote',noteVerify.userVerify,noteController.getDeleteNote)
 router.put('/unDeleteNote',noteVerify.userVerify,noteController.unDeleteNote);
 
 router.post('/addCollaborator',noteVerify.userVerify,noteController.addCollaborator);
-router.get('/getCollaborator',noteVerify.userVerify,noteController.getCollaborator);
-router.delete('/deleteCollaborator',noteVerify.userVerify,noteController.deleteCollaborator)
+router.post('/getCollaborator',noteVerify.userVerify,noteController.getCollaborator);
+router.put('/deleteCollaborator',noteVerify.userVerify,noteController.deleteCollaborator)
+router.get('/getAllCollaborator',noteVerify.userVerify,noteController.getAllCollaborator);
 
 
 router.put('/archiveNote',noteVerify.userVerify,noteController.archiveNote);

@@ -52,6 +52,21 @@ exports.getAllNote = (req, res) => {
             response.data = err;
             res.status(404).send(response)
         })
+} 
+exports.getCollaboratorNote = (req, res) => {
+
+    let response = {};
+    noteService.getCollaboratedNotes(req)
+        .then((data) => {
+            response.sucess = true;
+            response.data = data;
+            res.status(200).send(response)
+        })
+        .catch((err) => {
+            response.sucess = false;
+            response.data = err;
+            res.status(404).send(response)
+        })
 }
 
 exports.deleteNote = (req, res) => {
@@ -134,6 +149,8 @@ exports.unDeleteNote = (req, res) => {
 
 exports.addCollaborator = (req, res) => {
     let response = {};
+  
+    
     noteService.addCollaborator(req)
         .then((data) => {
             response.sucess = true
@@ -147,12 +164,25 @@ exports.addCollaborator = (req, res) => {
 }
 
 exports.getCollaborator = (req, res) => {
+     req.checkBody('noteId','enter the name as noteId').notEmpty();
+     console.log("REQQQ->in controller",req.body);
+    let error=req.validationErrors();
     let response = {};
+    if(error){
+        response.error=error;
+        response.sucess=false;
+        res.status(422).send(response)
+    }
+   
     noteService.getCollaborator(req)
+
         .then((data) => {
+            
+            
             response.sucess = true;
             response.data = data;
             res.status(200).send(response)
+           
         })
         .catch((err) => {
             response.sucess = false
@@ -162,6 +192,8 @@ exports.getCollaborator = (req, res) => {
 }
 
 exports.deleteCollaborator = (req, res) => {
+    console.log("Ress to delete in  body--->",req.body);
+    
     let response = {};
     noteService.deleteCollaborator(req)
         .then((data) => {
@@ -174,7 +206,22 @@ exports.deleteCollaborator = (req, res) => {
             response.data = err;
             res.status(500).send(response)
         })
+}  
+exports.getAllCollaborator = (req, res) => {
+    let response = {};
+    noteService.getAllCollaborator(req)
+        .then((data) => {
+            response.sucess = true;
+            response.data = data;
+            res.status(200).send(response)
+        })
+        .catch((err) => {
+            response.sucess = false
+            response.data = err;
+            res.status(500).send(response)
+        })
 } 
+
 
 
 

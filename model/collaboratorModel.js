@@ -10,11 +10,13 @@ const addCollaborator = new Schema({
         required: true
     },
     noteId: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: "notes",
         required: true
     },
     collaboratorId: {
-        type: [mongoose.Schema.Types.ObjectId],                    
+        // type: [mongoose.Schema.Types.ObjectId],      
+        type: [String],                  
         required: true,
         ref:"user"
    

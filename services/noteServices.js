@@ -77,6 +77,24 @@ exports.getAllNote = (req) => {
         console.log(e);
     }
 }
+//getCollaboratorNote this function is used to get noteid of whom been collaborated
+exports.getCollaboratedNotes = async (req) => {
+ 
+    
+    try {
+        return await new Promise((resolve, reject) => {
+            collaboratorModel.COLLABORATOR.find({collaboratorId: req.decoded.payload.email}).populate('noteId').exec((err, data) => {
+                if (data) resolve(data), console.log("getting collab notes", data);
+                else reject(err)
+            })
+
+        })
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+
 
 exports.deleteNote = (req) => {
     try {
@@ -179,6 +197,7 @@ exports.updateNote = (req) => {
 //                 collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, (err, data) => {
 //                     if (err || data == null) {
 //                         let newCollaborator = new collaboratorModel.COLLABORATOR({
+//                             "_id": new mongoose.Types.ObjectId(),
 //                             "_userId": req.decoded.payload.id,
 //                             "noteId": req.body.noteId,
 //                             "collaboratorId": req.body.collaboratorId
@@ -204,6 +223,8 @@ exports.updateNote = (req) => {
 //                                     if (data) {
 //                                         resolve(data)
 //                                     } else {
+
+
 //                                         reject(err)
 //                                     }
 //                                 })
@@ -222,17 +243,28 @@ exports.updateNote = (req) => {
 // /*
 // "noteId":"",
 // */
+// const fundooUsers=require('../model/noteModel')
 // exports.getCollaborator = async (req, res) => {
 //     try {
 
-//         return await new Promise((resolve, reject) => {
-//             collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, (err, data) => {
+//         return await new Promise(async (resolve, reject) => {
+//             collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, async (err, data) => {
+//                 console.log("Note id to print", req.body.noteId );
+
 //                 if (data) {
-//                     // let getOnlyCollaborator = data.collaboratorId;
-//                     // let getOnlyCollaborator = data;
-//                     resolve(data)
+//                     let onlyCollaboratorId = data.collaboratorId;
+//                     let colabUsersDetails=  await fundooUsers.getCollaboratorUsers(onlyCollaboratorId);
+//                     console.log("result in collb service--->",colabUsersDetails);
+
+//                     let response1={}
+//                     response1.data=data;
+//                     response1.collaboratorUsers=colabUsersDetails;
+//                     resolve(response1)
+
 //                 } else {
-//                     reject("Note id not found", err)
+//                     reject(err)
+//                     console.log("Note id not found");
+
 //                 }
 //             })
 //         })
@@ -272,6 +304,25 @@ exports.deleteCollaborator = (req, res) => {
     } catch (e) {
         console.log(e);
     }
+}
+
+
+exports.getAllCollaborator = async (req, res) => {
+
+    return await new Promise((resolve, reject) => {
+        collaboratorModel.COLLABORATOR.find({}, (err, data) => {
+            console.log("Note id to print", req.body.noteId);
+
+            if (data) {
+
+                resolve(data)
+
+            } else {
+                reject(err)
+
+            }
+        })
+    })
 }
 
 
@@ -598,7 +649,8 @@ exports.addCollaborator = (req) => {
         return new Promise((resolve, reject) => {
 
 
-            if (req.decoded.payload.id != req.body.collaboratorId) {
+
+            if (req.decoded.payload.email != req.body.collaboratorId) {
 
 
                 collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, (err, data) => {
@@ -630,8 +682,8 @@ exports.addCollaborator = (req) => {
                                     if (data) {
                                         resolve(data)
                                     } else {
-                                       
-                                        
+
+
                                         reject(err)
                                     }
                                 })
@@ -650,40 +702,28 @@ exports.addCollaborator = (req) => {
 /*
 "noteId":"",
 */
+const fundooUsers = require('../model/noteModel')
 exports.getCollaborator = async (req, res) => {
     try {
 
-        return await new Promise((resolve, reject) => {
-            collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, (err, data) => {
-                console.log("Note id to print", req.body.noteId );
-                
-                if (data) {
-                    console.log("datatta-->", data);
+        return await new Promise(async (resolve, reject) => {
+            collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, async (err, data) => {
+                console.log("Note id to print", req.body.noteId);
 
-                    let colId = data.collaboratorId;
-                    let collabArray = []
-                    
-                    colId.forEach(async (element) => {
-                        console.log(element);
-                    
-                        await userModel.USERS.aggregate([{ $match: { _id: element } }, { $group: { _id: { email: "$email", lastName: "$lastName", firstName: "$firstName" } } }]).then(data => {
-                            // console.log("getting all collab user name-->",data);
-                          collabArray.push(data[0])
-                            console.log("Final array ", collabArray);
-                        
-                            
-                        })
-                       
-                    });
-                  
-               
-                
-                    let ree={}
-                    ree.data=data;
-                    ree.coll=collabArray
-                    resolve(data)
+                if (data) {
+                    let onlyCollaboratorId = data.collaboratorId;
+                    let colabUsersDetails = await fundooUsers.getCollaboratorUsers(onlyCollaboratorId);
+                    console.log("result in collb service--->", colabUsersDetails);
+
+                    let response1 = {}
+                    response1.data = data;
+                    response1.collaboratorUsers = colabUsersDetails;
+                    resolve(response1)
+
                 } else {
-                    reject("Note id not found")
+                    reject(err)
+                    console.log("Note id not found");
+
                 }
             })
         })
@@ -691,5 +731,8 @@ exports.getCollaborator = async (req, res) => {
         console.log(e);
     }
 }
+
+
+
 
 

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 mongoose.set('useFindAndModify', false);
+const userModel = require('../model/userModel')
 
 /*creating a schema of database*/
 var Schema = mongoose.Schema
@@ -23,28 +24,28 @@ const fundoNotes = new Schema({
         type: Boolean,
         default: false
     },
-    isArchive:{
+    isArchive: {
         type: Boolean,
         default: false
     },
-    reminder:{
+    reminder: {
         // type:Date
-        type:String
+        type: String
     },
-    "index":{
-        type:Number
+    "index": {
+        type: Number
     },
-    "labels":{
-        type:[mongoose.Schema.Types.ObjectId],
-        ref:"label"
+    "labels": {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "label"
 
     },
-    "noteColor":{
-        type:String
-       
+    "noteColor": {
+        type: String
+
 
     },
-  
+
 
 },
     {
@@ -53,3 +54,20 @@ const fundoNotes = new Schema({
 )
 
 exports.notes = mongoose.model("notes", fundoNotes)
+
+//this function is used to get all users who collaborated with note and return value to noteService -> getCollaborator
+exports.getCollaboratorUsers = (colId) => {
+
+    return new Promise(async (resolve, reject) => {
+        try {
+            let collabArray = []
+            for (let collId of colId) {
+                let temp = await userModel.USERS.aggregate([{ $match: { email: collId } }, { $group: { _id: { _id: "$_id",email: "$email", lastName: "$lastName", firstName: "$firstName" } } }]);
+                collabArray.push(temp[0]);
+            }
+            resolve(collabArray);
+        } catch (err) {
+            reject(err)
+        }
+    })
+}
