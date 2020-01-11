@@ -15,6 +15,7 @@ router.put('/unDeleteNote',noteVerify.userVerify,noteController.unDeleteNote);
 
 router.post('/addCollaborator',noteVerify.userVerify,noteController.addCollaborator);
 router.post('/getCollaborator',noteVerify.userVerify,noteController.getCollaborator);
+// router.post('/getCollaborator',noteVerify.userVerify,noteController.getCollaborator);
 router.put('/deleteCollaborator',noteVerify.userVerify,noteController.deleteCollaborator)
 router.get('/getAllCollaborator',noteVerify.userVerify,noteController.getAllCollaborator);
 

@@ -307,23 +307,7 @@ exports.deleteCollaborator = (req, res) => {
 }
 
 
-exports.getAllCollaborator = async (req, res) => {
 
-    return await new Promise((resolve, reject) => {
-        collaboratorModel.COLLABORATOR.find({}, (err, data) => {
-            console.log("Note id to print", req.body.noteId);
-
-            if (data) {
-
-                resolve(data)
-
-            } else {
-                reject(err)
-
-            }
-        })
-    })
-}
 
 
 exports.archiveNote = (req) => {
@@ -712,6 +696,7 @@ exports.getCollaborator = async (req, res) => {
 
                 if (data) {
                     let onlyCollaboratorId = data.collaboratorId;
+                    console.log("ggggg",onlyCollaboratorId);
                     let colabUsersDetails = await fundooUsers.getCollaboratorUsers(onlyCollaboratorId);
                     console.log("result in collb service--->", colabUsersDetails);
 
@@ -730,6 +715,36 @@ exports.getCollaborator = async (req, res) => {
     } catch (e) {
         console.log(e);
     }
+}
+exports.getAllCollaborator = async (req, res) => {
+
+    return await new Promise(async(resolve, reject) => {
+        collaboratorModel.COLLABORATOR.find({}, async(err, data) => {
+            console.log("Note id to print", req.body.noteId);
+
+            if (data) {
+                
+
+               
+                let arr=[]
+                for(let toFindID  of data)
+                {
+                    let array=toFindID.collaboratorId;
+                    for(let k of array)
+                    arr.push(k)
+                }
+                let colabUsersDetails = await fundooUsers.getCollaboratorUsers(arr);
+                    console.log("result in collb service--->", colabUsersDetails);
+                    let response1 = {}
+                    response1.data = data;
+                    response1.colabUsersDetails = colabUsersDetails;
+                    resolve(response1)
+            } else {
+                reject(err)
+
+            }
+        })
+    })
 }
 
 

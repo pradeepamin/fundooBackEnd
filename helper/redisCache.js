@@ -18,6 +18,8 @@ client.on('error', (err) => {
  **/
 
 exports.setRedis = (val, callback) => {
+    console.log("valieee of token--",val);
+    
     client.set(process.env.key, JSON.stringify(val), (err, result) => {
         if (result) {
             console.log("token set in cache", result);

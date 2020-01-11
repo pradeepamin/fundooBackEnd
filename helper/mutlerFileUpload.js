@@ -22,7 +22,7 @@ AWS.config.update({
 const s3 = new AWS.S3();
 
 const fileFilter = (req, file, cb) => {
-   console.log("REQQ in multer--",req);
+  //  console.log("REQQ in multer--",req);
   
 
   if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
@@ -42,12 +42,14 @@ const upload = multer({
     contentType: multerS3.AUTO_CONTENT_TYPE,
     acl: 'public-read',
     metadata: (req, file, cb) => {
-      console.log("req in multer---------", file);
+      console.log("req in multer--file-------", file);
       cb(null, { fieldName: 'Profile' });
     },
     key: (req, file, cb) => {
       // cb(null, file.originalname)
       cb(null, file.originalname);
+      
+      
       
     }
   })
