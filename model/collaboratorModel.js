@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 var Schema = mongoose.Schema
 const addCollaborator = new Schema({
     /** creating schema for registration */
-    _id: Schema.Types.ObjectId,
+    // _id: Schema.Types.ObjectId,
     _userId: {
         type: Schema.Types.ObjectId,
         ref: "users",
@@ -14,13 +14,13 @@ const addCollaborator = new Schema({
         ref: "notes",
         required: true
     },
-    collaboratorId: {
+    collaboratorId:[ {
         // type: [mongoose.Schema.Types.ObjectId],      
-        type: [String],                  
+        type: String,                  
         required: true,
         ref:"user"
    
-    }
+    }]
 },
     {
         timestamps: true
