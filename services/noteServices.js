@@ -406,7 +406,12 @@ exports.addReminder = (req) => {
                 if (err) {
                     reject(err)
                 } else {
-                    resolve(result)
+                    let res={}
+                    res.resolve=result;
+                    res.email=req.decoded.payload.email
+                    resolve(res)
+                    // console.log("REss-->",result);
+                    
 
                 }
             })
@@ -639,17 +644,23 @@ exports.addCollaborator = (req) => {
 
                 collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, (err, data) => {
                     if (err || data == null) {
+                        console.log("gagagaaaaa");
+                        
                         let newCollaborator = new collaboratorModel.COLLABORATOR({
-                            "_id": new mongoose.Types.ObjectId(),
+                            // "_id": new mongoose.Types.ObjectId(),
                             "_userId": req.decoded.payload.id,
                             "noteId": req.body.noteId,
                             "collaboratorId": req.body.collaboratorId
                         })
                         newCollaborator.save((err, data) => {
                             if (data) {
+                                console.log("adter saveeeee");
+                                
                                 resolve(data);
 
                             } else {
+                                console.log("in errroor");
+                                
                                 reject(err)
                             }
                         })
@@ -660,17 +671,27 @@ exports.addCollaborator = (req) => {
                         if (arrayCollaborator.includes(req.body.collaboratorId)) {
                             reject("User already exits")
 
-                        } else
+                        } 
+                        else{
+                    
+                        console.log("after elase");
+                        
                             collaboratorModel.COLLABORATOR.updateOne({ "noteId": req.body.noteId },
                                 { $push: { "collaboratorId": req.body.collaboratorId } }, (err, data) => {
                                     if (data) {
                                         resolve(data)
                                     } else {
-
+                                        console.log("Ein errror");
+                                        
 
                                         reject(err)
                                     }
+                                     
                                 })
+                            }
+                            
+                              
+
                     }
                 })
 
