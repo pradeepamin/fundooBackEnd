@@ -153,7 +153,7 @@ exports.addCollaborator = (req, res) => {
     
     noteService.addCollaborator(req)
         .then((data) => {
-            response.sucess = true
+            response.succccess = true
             response.data = data;
             res.status(200).send(response);
         }).catch((err) => {
@@ -291,6 +291,18 @@ exports.addReminder = (req, res) => {
             res.status(500).send(response)
         })
 }
+
+
+// let reminderResponse=require('../helper/reminderScheduler')
+// exports.reminderResponse=(req,res)={
+//     reminderResponse.scheduleReminder(req)
+//     .then((data)=>{
+//         response.sucess = true;
+//             response.data = data;
+//             res.status(200).send(response)
+//     })
+
+// }
 
 
 exports.deleteReminder = (req, res) => {
