@@ -4,10 +4,11 @@ const elasticSearch=require('../helper/elasticSearch')
 const noteVerify=require('../helper/token')
 const express=require('express');
 const router=express.Router();
+const upload = require('../helper/mutlerFileUpload')
 
 router.post('/addNote',noteVerify.userVerify,noteController.addNote);
 router.get('/getAllNote',noteVerify.userVerify,noteController.getAllNote);
-router.get('/getCollaboratorNote',noteVerify.userVerify,noteController.getCollaboratorNote);
+// router.get('/getCollaboratorNote',noteVerify.userVerify,noteController.getCollaboratorNote);
 router.put('/deleteNote',noteVerify.userVerify,noteController.deleteNote);
 router.put('/updateNote',noteVerify.userVerify,noteController.updateNote);
 router.get('/getDeleteNote',noteVerify.userVerify,noteController.getDeleteNote)
@@ -39,6 +40,8 @@ router.put('/noteLabel',noteVerify.userVerify,noteController.noteLabel)
 router.put('/noteLabelUndo',noteVerify.userVerify,noteController.noteLabelUndo)
 
 router.post('/noteColor',noteVerify.userVerify,noteController.noteColor)
+ router.post('/noteImage',noteVerify.userVerify,upload.single('image'),noteController.noteImage)
+router.put('/deleteNoteImage',noteVerify.userVerify,noteController.deleteNoteImage)
 
 router.post('/popEx',noteVerify.userVerify,noteController.popEx)
 router.get('/popEx1',noteVerify.userVerify,noteController.popEx1)

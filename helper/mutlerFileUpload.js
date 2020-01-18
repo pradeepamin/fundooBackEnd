@@ -22,7 +22,8 @@ AWS.config.update({
 const s3 = new AWS.S3();
 
 const fileFilter = (req, file, cb) => {
-  //  console.log("REQQ in multer--",req);
+    // console.log("REQQ in multer--",req.file);
+    // console.log("REQQ in multer body  --",req.body);
   
 
   if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {

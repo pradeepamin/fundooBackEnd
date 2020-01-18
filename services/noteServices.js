@@ -78,21 +78,21 @@ exports.getAllNote = (req) => {
     }
 }
 //getCollaboratorNote this function is used to get noteid of whom been collaborated
-exports.getCollaboratedNotes = async (req) => {
+// exports.getCollaboratedNotes = async (req) => {
  
     
-    try {
-        return await new Promise((resolve, reject) => {
-            collaboratorModel.COLLABORATOR.find({collaboratorId: req.decoded.payload.email}).populate('noteId').exec((err, data) => {
-                if (data) resolve(data), console.log("getting collab notes", data);
-                else reject(err)
-            })
+//     try {
+//         return await new Promise((resolve, reject) => {
+//             collaboratorModel.COLLABORATOR.find({collaboratorId: req.decoded.payload.email}).populate('noteId').exec((err, data) => {
+//                 if (data) resolve(data), console.log("getting collab notes", data);
+//                 else reject(err)
+//             })
 
-        })
-    } catch (e) {
-        console.log(e);
-    }
-}
+//         })
+//     } catch (e) {
+//         console.log(e);
+//     }
+// }
 
 
 
@@ -399,7 +399,7 @@ exports.findNote = (req) => {
 
 exports.addReminder = (req) => {
     try {
-        let date = new Date(req.body.reminder)
+        // let date = new Date(req.body.reminder)
         return new Promise((resolve, reject) => {
 
             noteModel.notes.findOneAndUpdate({ _id: req.body.noteId }, { reminder: req.body.reminder }, (err, result) => {
@@ -436,7 +436,7 @@ exports.deleteReminder = (req) => {
                 }
             })
 
-        })
+        })                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
     } catch (e) {
         console.log(e);
     }
@@ -571,7 +571,46 @@ exports.noteColor = (req) => {
 
         })
     })
+} 
+
+exports.noteImage = (req) => {
+     console.log("reeee",req.decoded.payload.id);
+    // console.log("image in service",req.file.location);
+    
+
+    return new Promise((resolve, reject) => {
+        noteModel.notes.findByIdAndUpdate({ "_id": req.body.noteId }, { "noteImage": req.file.location }, (err, result) => {
+            if (err) {
+                reject(err)
+                // console.log("resssult--",err);
+            } else {
+                resolve(result)
+             
+            }
+            cacheNote.delRedisNote(req.decoded.payload.id)
+
+        })
+    })
+} 
+exports.deleteNoteImage = (req) => {
+    try {
+        return new Promise((resolve, reject) => {
+            noteModel.notes.updateOne({ _id: req.body.noteId }, { $unset: { noteImage: "" } }, (err, result) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result)
+
+                }
+                cacheNote.delRedisNote(req.decoded.payload.id)
+            })
+
+        })
+    } catch (e) {
+        console.log(e);
+    }
 }
+
 
 
 
@@ -716,6 +755,7 @@ exports.getCollaborator = async (req, res) => {
                 console.log("Note id to print", req.body.noteId);
 
                 if (data) {
+                    //here send only email of who collaborated in note to get their only - fname.lnmae,email form user collection
                     let onlyCollaboratorId = data.collaboratorId;
                     console.log("ggggg",onlyCollaboratorId);
                     let colabUsersDetails = await fundooUsers.getCollaboratorUsers(onlyCollaboratorId);

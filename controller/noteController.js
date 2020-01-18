@@ -53,21 +53,21 @@ exports.getAllNote = (req, res) => {
             res.status(404).send(response)
         })
 } 
-exports.getCollaboratorNote = (req, res) => {
+// exports.getCollaboratorNote = (req, res) => {
 
-    let response = {};
-    noteService.getCollaboratedNotes(req)
-        .then((data) => {
-            response.sucess = true;
-            response.data = data;
-            res.status(200).send(response)
-        })
-        .catch((err) => {
-            response.sucess = false;
-            response.data = err;
-            res.status(404).send(response)
-        })
-}
+//     let response = {};
+//     noteService.getCollaboratedNotes(req)
+//         .then((data) => {
+//             response.sucess = true;
+//             response.data = data;
+//             res.status(200).send(response)
+//         })
+//         .catch((err) => {
+//             response.sucess = false;
+//             response.data = err;
+//             res.status(404).send(response)
+//         })
+// }
 
 exports.deleteNote = (req, res) => {
     req.checkBody('userId', 'user id is invalid').notEmpty();
@@ -485,6 +485,55 @@ exports.noteColor = (req, res) => {
         }
 } 
 
+
+exports.noteImage = (req, res) => {
+    // console.log("Req file--",req.body.request);
+    // console.log("Req file--",req.file.location);
+    // const req1 = req.body.request;
+    // const imageURL = req.file.location;
+
+    var error = req.validationErrors();
+    var response = {};
+    if (error) {
+        response.error = error;
+        response.sucess = false;
+        res.status(422).send(response);
+      
+    } else {
+    
+        noteService.noteImage(req)
+            .then((data) => {
+    
+                response.sucesssss = true;
+                response.data = data
+                res.status(200).send(response)
+                console.log(response);
+
+            })
+            .catch((err) => {
+                response.sucess = false;
+                response.err = err
+                res.status(404).send(response)
+            })
+        }
+}  
+
+exports.deleteNoteImage = (req, res) => {
+    // console.log("In con",req);
+
+    let response = {};
+    noteService.deleteNoteImage(req)
+        .then((data) => {
+            response.sucess = true;
+            response.data = data;
+            res.status(200).send(response)
+        })
+        .catch((err) => {
+            response.sucess = false
+            response.data = err;
+            res.status(500).send(response)
+        })
+}
 
 
 

@@ -10,8 +10,6 @@ exports.scheduleReminder =(req) => {
     console.log("reqqq---<", req.resolve.reminder);
 
     let email=req.email;
-
-
     return new Promise((resolve, reject) => {
          let date2 = new Date(req.resolve.reminder);
         //  console.log("reminder date--->",date);
@@ -23,7 +21,6 @@ exports.scheduleReminder =(req) => {
 
         var j = schedule.scheduleJob(date2,  function () {
             
-
             console.log('The world is going to end today.');
                 console.log("true");
                 const arr={
@@ -33,7 +30,7 @@ exports.scheduleReminder =(req) => {
                   }
 
                 
-                  noteCon.resData("You have one reminder")
+                //   noteCon.resData("You have one reminder")
                   sns.notification(arr,email);
                   resolve('triggered')
 
