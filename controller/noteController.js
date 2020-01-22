@@ -587,6 +587,42 @@ exports.popEx1 = (req, res) => {
  } 
  
 
+ exports.user = (req, res) => {
+    let response={};
+         noteService.user(req)
+             .then((data) => {
+                 response.sucess = true;
+                 response.data = data
+                 res.status(200).send(response)
+                 console.log(response);
+ 
+             })
+             .catch((err) => {
+                 response.fal = false;
+                 response.err = err
+                 res.status(404).send(response)
+             })
+         
+ } 
+ exports.getUser = (req, res) => {
+     let response={};
+          noteService.getUser(req)
+              .then((data) => {
+                  response.sucess = true;
+                  response.data = data
+                  res.status(200).send(response)
+                  console.log(response);
+  
+              })
+              .catch((err) => {
+                  response.sucess = false;
+                  response.err = err
+                  res.status(404).send(response)
+              })
+          
+  } 
+  
+
 
 
 

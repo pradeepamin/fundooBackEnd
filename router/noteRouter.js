@@ -43,8 +43,12 @@ router.post('/noteColor',noteVerify.userVerify,noteController.noteColor)
  router.post('/noteImage',noteVerify.userVerify,upload.single('image'),noteController.noteImage)
 router.put('/deleteNoteImage',noteVerify.userVerify,noteController.deleteNoteImage)
 
+
 router.post('/popEx',noteVerify.userVerify,noteController.popEx)
 router.get('/popEx1',noteVerify.userVerify,noteController.popEx1)
+
+router.post('/user',noteVerify.userVerify,noteController.user)
+router.get('/getUser',noteVerify.userVerify,noteController.getUser)
 
 
 module.exports=router;

@@ -5,10 +5,11 @@ const collaboratorModel = require('../model/collaboratorModel');
 const labelModel = require('../model/labelModel')
 const cacheNote = require('../helper/redisCache')
 const reminderSchedule = require('../helper/reminderScheduler')
-const userModel = require('../model/userModel')
+
 // // const elastic = require('../helper/elasticSearch')
 
 const pop = require('../model/populate')
+const userModelEX = require('../model/userModel')
 
 exports.addNote = (req) => {
     try {
@@ -619,58 +620,6 @@ exports.deleteNoteImage = (req) => {
 
 
 
-exports.popEx = (req) => {
-    return new Promise((resolve, reject) => {
-        console.log("author");
-
-        let author = new pop.Person({
-            "_id": new mongoose.Types.ObjectId(),
-            "name": 'Ian Fleming',
-            "age": 50
-
-        })
-        author.save((err, data) => {
-            if (data) {
-                resolve(data);
-            } else {
-                reject(err);
-            }
-            console.log("Author id--->", author._id);
-
-            const story1 = new pop.Story({
-                title: 'Casino Royale',
-                author: author._id
-            });
-
-            story1.save((err, data) => {
-                if (data) {
-                    resolve(data);
-                } else {
-                    reject(err);
-                }
-
-            })
-        })
-        console.log("populare");
-    })
-}
-
-exports.popEx1 = (req) => {
-
-    return new Promise((resolve, reject) => {
-        pop.Story.findOne({ title: 'Casino Royale' }).
-            populate('author').exec((err, story) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    console.log('The author is %s', story.author.name);
-                    resolve(story);
-
-                }
-            });
-
-    })
-}
 
 exports.addCollaborator = (req) => {
     try {
@@ -809,6 +758,76 @@ exports.getAllCollaborator = async (req, res) => {
 }
 
 
+const userModelEX1 = require('../model/dataModel')
+exports.user = (req) => {
+    console.log("userssss");
+    console.log(req.body.firstName);
+    console.log(req.body.lastName);
+    console.log(req.body.position);
+    console.log(req.body.car);
+    return new Promise((resolve, reject) => {
+       
+        
+        
+
+        let UsrModel = new userModelEX1.ModelUSER({
+
+            "firstName": req.body.firstName,
+            "lastName": req.body.lastName,
+            "position": req.body.position,
+            "car": req.body.car
+
+        })  
+        UsrModel.save((err, data) => {
+            if (data) {
+                resolve(data);
+            } else {
+                reject(err);
+                console.log("err",err); 
+            }
+        })
+    })
+}
+exports.getUser = (req) => {
+   
+   
+
+    return new Promise((resolve, reject) => {
+       
+ userModelEX1.ModelUSER.find({},(err,data)=>{
+     if(data){
+         resolve(data)
+     }else{
+         reject(err)
+     }
+ })
+       
+    })
+}
 
 
+
+
+
+// exports.user = (req) => {
+//     return new Promise((resolve, reject) => {
+//         console.log("userssss");
+
+//         let UsrModel = new userModelEX.user({
+//             "_id": new mongoose.Types.ObjectId(),
+//             "name": req.body.name,
+//             "car": req.body.car
+
+//         })  
+//         UsrModel.save((err, data) => {
+//             if (data) {
+//                 resolve(data);
+//             } else {
+//                 reject(err);
+//             }
+           
+//         })
+       
+//     })
+// }
 
