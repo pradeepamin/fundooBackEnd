@@ -5,17 +5,12 @@ const users = Schema({
 //   _id: Schema.Types.ObjectId,
   firstName: String,
   lastName:String,
-  position:String,
-  car: Array
+  carName:String
+
+
   
 });
 
-// const cars = Schema({
-  
-//   brand: String,
-//   year:String,
-  
-// });
+
 
 exports.ModelUSER = mongoose.model('carDetails', users);
-// exports.ModelCar = mongoose.model('car', cars);

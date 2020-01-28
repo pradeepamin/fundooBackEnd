@@ -764,19 +764,15 @@ exports.user = (req) => {
     console.log("userssss");
     console.log(req.body.firstName);
     console.log(req.body.lastName);
-    console.log(req.body.position);
     console.log(req.body.car);
     return new Promise((resolve, reject) => {
-       
-        
-        
+    
 
         let UsrModel = new userModelEX1.ModelUSER({
 
             "firstName": req.body.firstName,
             "lastName": req.body.lastName,
-            "position": req.body.position,
-            "car": req.body.car
+            "carName": req.body.carName
 
         })  
         UsrModel.save((err, data) => {
@@ -790,8 +786,6 @@ exports.user = (req) => {
     })
 }
 exports.getUser = (req) => {
-   
-   
 
     return new Promise((resolve, reject) => {
        

@@ -1,7 +1,7 @@
 const noteService = require('../services/noteServices')
 
 const scheduler=require('../helper/reminderScheduler')
-
+const logger=require('../../server/helper/logger')
 
 
 
@@ -17,7 +17,7 @@ exports.addNote = (req, res) => {
         response.error = error;
         response.sucess = false;
         res.status(422).send(response);
-        console.log("error-register", error);
+        logger.error("error-register", error);
         console.log("Response", response)
     } else {
         console.log("Req body---->", req.body)
