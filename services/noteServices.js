@@ -5,7 +5,7 @@ const collaboratorModel = require('../model/collaboratorModel');
 const labelModel = require('../model/labelModel')
 const cacheNote = require('../helper/redisCache')
 const reminderSchedule = require('../helper/reminderScheduler')
-const logger=require('../../server/helper/logger')
+const logger=require('../helper/logger')
 
 // // const elastic = require('../helper/elasticSearch')
 

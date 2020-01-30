@@ -1,7 +1,6 @@
 const noteService = require('../services/noteServices')
-
 const scheduler=require('../helper/reminderScheduler')
-const logger=require('../../server/helper/logger')
+const logger=require('../helper/logger')
 
 
 
