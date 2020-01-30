@@ -14,7 +14,7 @@ const cors = require('cors');
 const bodyParser=require('body-parser');
 const routerUser=require('./router/userRouter');
 const routerNote=require('./router/noteRouter')
-const dbConnect=require('../server/configuration/dbConfig')
+const dbConnect=require('./configuration/dbConfig')
 const expressValidator=require('express-validator');
 require('dotenv').config()
 
