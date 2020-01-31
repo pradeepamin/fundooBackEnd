@@ -49,11 +49,7 @@ const fundoNotes = new Schema({
     },
     "noteImage": {
         type: String
-
-    },
-    
-
-   
+    }, 
 },
     {
         timestamps: true

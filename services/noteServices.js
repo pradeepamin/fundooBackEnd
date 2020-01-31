@@ -6,8 +6,7 @@ const labelModel = require('../model/labelModel')
 const cacheNote = require('../helper/redisCache')
 const reminderSchedule = require('../helper/reminderScheduler')
 
-
-// // const elastic = require('../helper/elasticSearch')
+// const elastic = require('../helper/elasticSearch')
 
 const pop = require('../model/populate')
 const userModelEX = require('../model/userModel')
@@ -80,23 +79,19 @@ exports.getAllNote = (req) => {
     }
 }
 //getCollaboratorNote this function is used to get noteid of whom been collaborated
-// exports.getCollaboratedNotes = async (req) => {
- 
-    
+
+// exports.getCollaboratedNotes = async (req) => { 
 //     try {
 //         return await new Promise((resolve, reject) => {
 //             collaboratorModel.COLLABORATOR.find({collaboratorId: req.decoded.payload.email}).populate('noteId').exec((err, data) => {
 //                 if (data) resolve(data), console.log("getting collab notes", data);
 //                 else reject(err)
 //             })
-
 //         })
 //     } catch (e) {
 //         console.log(e);
 //     }
 // }
-
-
 
 exports.deleteNote = (req) => {
     try {
@@ -143,7 +138,6 @@ exports.unDeleteNote = (req) => {
     }
 }
 
-
 //getDeleteNote
 exports.getDeleteNote = (req) => {
 
@@ -176,75 +170,13 @@ exports.updateNote = (req) => {
 
                 // elastic.deleteDocument(req)
                 cacheNote.delRedisNote(req.decoded.payload.id)
-
-
             })
         })
     } catch (e) {
         console.log(e);
     }
 }
-/*
-"noteId":"",
-"collaboratorID":""
-*/
-// exports.addCollaborator = (req) => {
-//     try {
-//         return new Promise((resolve, reject) => {
 
-
-//             if (req.decoded.payload.id != req.body.collaboratorId) {
-
-
-//                 collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, (err, data) => {
-//                     if (err || data == null) {
-//                         let newCollaborator = new collaboratorModel.COLLABORATOR({
-//                             "_id": new mongoose.Types.ObjectId(),
-//                             "_userId": req.decoded.payload.id,
-//                             "noteId": req.body.noteId,
-//                             "collaboratorId": req.body.collaboratorId
-//                         })
-//                         newCollaborator.save((err, data) => {
-//                             if (data) {
-//                                 resolve(data);
-
-//                             } else {
-//                                 reject(err)
-//                             }
-//                         })
-//                     }
-//                     else {
-//                         let arrayCollaborator = data.collaboratorId;
-//                         //used fetch only disticnt value.
-//                         if (arrayCollaborator.includes(req.body.collaboratorId)) {
-//                             reject("User already exits")
-
-//                         } else
-//                             collaboratorModel.COLLABORATOR.updateOne({ "noteId": req.body.noteId },
-//                                 { $push: { "collaboratorId": req.body.collaboratorId } }, (err, data) => {
-//                                     if (data) {
-//                                         resolve(data)
-//                                     } else {
-
-
-//                                         reject(err)
-//                                     }
-//                                 })
-//                     }
-//                 })
-
-//             } else {
-//                 console.log("This is your email id. Cannot be collaborate!");
-//                 reject("This is your email id. Cannot be collaborate!")
-//             }
-//         })
-//     } catch (e) {
-//         console.log(e);
-//     }
-// }
-// /*
-// "noteId":"",
-// */
 // const fundooUsers=require('../model/noteModel')
 // exports.getCollaborator = async (req, res) => {
 //     try {
@@ -308,26 +240,17 @@ exports.deleteCollaborator = (req, res) => {
     }
 }
 
-
-
-
-
 exports.archiveNote = (req) => {
     try {
-        console.log("req----->", req);
-
         return new Promise((resolve, reject) => {
             noteModel.notes.findByIdAndUpdate({ _id: req.body.noteId }, { isArchive: true }, (err, result) => {
                 if (err) {
                     reject(err)
                 } else {
                     resolve(result)
-
                 }
                 cacheNote.delRedisNote(req.decoded.payload.id)
                 console.log("Data delete from redies cache to update the archive");
-
-
             })
 
         })
@@ -337,31 +260,24 @@ exports.archiveNote = (req) => {
 }
 
 exports.unarchiveNote = (req) => {
-    // console.log("req----->",req);
     try {
-
         return new Promise((resolve, reject) => {
             noteModel.notes.findByIdAndUpdate({ _id: req.body.noteId }, { isArchive: false }, (err, result) => {
                 if (err) {
                     reject(err)
                 } else {
                     resolve(result)
-
                 }
                 cacheNote.delRedisNote(req.decoded.payload.id)
-
             })
-
         })
     } catch (e) {
         console.log(e);
     }
-} //getArchiveNote
-
+}
+//getArchiveNote
 exports.getArchiveNote = (req) => {
-
     return new Promise((resolve, reject) => {
-
         noteModel.notes.find({ _userId: req.decoded.payload.id, isDeleted: false, isArchive: true }, (err, result) => {
             if (err) {
                 reject(err)
@@ -369,7 +285,6 @@ exports.getArchiveNote = (req) => {
                 if (!result.length == 0) {  //this condition to check whether get note is empty or not
                     resolve(result)
                     console.log("resullt-->", result);
-
                 } else {
                     console.log("NO Notes");
                     reject("No Notes")
@@ -378,9 +293,6 @@ exports.getArchiveNote = (req) => {
         })
     })
 }
-
-
-
 
 exports.findNote = (req) => {
     try {
@@ -408,13 +320,11 @@ exports.addReminder = (req) => {
                 if (err) {
                     reject(err)
                 } else {
-                    let res={}
-                    res.resolve=result;
-                    res.email=req.decoded.payload.email
+                    let res = {}
+                    res.resolve = result;
+                    res.email = req.decoded.payload.email
                     resolve(res)
                     // console.log("REss-->",result);
-                    
-
                 }
             })
         })
@@ -422,8 +332,6 @@ exports.addReminder = (req) => {
         console.log(e);
     }
 }
-
-
 
 
 exports.deleteReminder = (req) => {
@@ -434,11 +342,10 @@ exports.deleteReminder = (req) => {
                     reject(err)
                 } else {
                     resolve(result)
-
                 }
             })
 
-        })                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+        })
     } catch (e) {
         console.log(e);
     }
@@ -570,16 +477,13 @@ exports.noteColor = (req) => {
 
             }
             cacheNote.delRedisNote(req.decoded.payload.id)
-
         })
     })
-} 
+}
 
 exports.noteImage = (req) => {
-     console.log("reeee",req.decoded.payload.id);
+    console.log("reeee", req.decoded.payload.id);
     // console.log("image in service",req.file.location);
-    
-
     return new Promise((resolve, reject) => {
         noteModel.notes.findByIdAndUpdate({ "_id": req.body.noteId }, { "noteImage": req.file.location }, (err, result) => {
             if (err) {
@@ -587,13 +491,12 @@ exports.noteImage = (req) => {
                 // console.log("resssult--",err);
             } else {
                 resolve(result)
-             
+
             }
             cacheNote.delRedisNote(req.decoded.payload.id)
-
         })
     })
-} 
+}
 exports.deleteNoteImage = (req) => {
     try {
         return new Promise((resolve, reject) => {
@@ -613,15 +516,6 @@ exports.deleteNoteImage = (req) => {
     }
 }
 
-
-
-
-
-
-
-
-
-
 exports.addCollaborator = (req) => {
     try {
         return new Promise((resolve, reject) => {
@@ -634,7 +528,7 @@ exports.addCollaborator = (req) => {
                 collaboratorModel.COLLABORATOR.findOne({ "noteId": req.body.noteId }, (err, data) => {
                     if (err || data == null) {
                         console.log("gagagaaaaa");
-                        
+
                         let newCollaborator = new collaboratorModel.COLLABORATOR({
                             // "_id": new mongoose.Types.ObjectId(),
                             "_userId": req.decoded.payload.id,
@@ -644,12 +538,12 @@ exports.addCollaborator = (req) => {
                         newCollaborator.save((err, data) => {
                             if (data) {
                                 console.log("adter saveeeee");
-                                
+
                                 resolve(data);
 
                             } else {
                                 console.log("in errroor");
-                                
+
                                 reject(err)
                             }
                         })
@@ -660,27 +554,24 @@ exports.addCollaborator = (req) => {
                         if (arrayCollaborator.includes(req.body.collaboratorId)) {
                             reject("User already exits")
 
-                        } 
-                        else{
-                    
-                        console.log("after elase");
-                        
+                        }
+                        else {
+
+                            console.log("after elase");
+
                             collaboratorModel.COLLABORATOR.updateOne({ "noteId": req.body.noteId },
                                 { $push: { "collaboratorId": req.body.collaboratorId } }, (err, data) => {
                                     if (data) {
                                         resolve(data)
                                     } else {
                                         console.log("Ein errror");
-                                        
+
 
                                         reject(err)
                                     }
-                                     
-                                })
-                            }
-                            
-                              
 
+                                })
+                        }
                     }
                 })
 
@@ -707,7 +598,7 @@ exports.getCollaborator = async (req, res) => {
                 if (data) {
                     //here send only email of who collaborated in note to get their only - fname.lnmae,email form user collection
                     let onlyCollaboratorId = data.collaboratorId;
-                    console.log("ggggg",onlyCollaboratorId);
+                    console.log("ggggg", onlyCollaboratorId);
                     let colabUsersDetails = await fundooUsers.getCollaboratorUsers(onlyCollaboratorId);
                     console.log("result in collb service--->", colabUsersDetails);
 
@@ -727,29 +618,25 @@ exports.getCollaborator = async (req, res) => {
         console.log(e);
     }
 }
+
 exports.getAllCollaborator = async (req, res) => {
 
-    return await new Promise(async(resolve, reject) => {
-        collaboratorModel.COLLABORATOR.find({}, async(err, data) => {
+    return await new Promise(async (resolve, reject) => {
+        collaboratorModel.COLLABORATOR.find({}, async (err, data) => {
             console.log("Note id to print", req.body.noteId);
-
             if (data) {
-                
-
-               
-                let arr=[]
-                for(let toFindID  of data)
-                {
-                    let array=toFindID.collaboratorId;
-                    for(let k of array)
-                    arr.push(k)
+                let arr = []
+                for (let toFindID of data) {
+                    let array = toFindID.collaboratorId;
+                    for (let k of array)
+                        arr.push(k)
                 }
                 let colabUsersDetails = await fundooUsers.getCollaboratorUsers(arr);
-                    console.log("result in collb service--->", colabUsersDetails);
-                    let response1 = {}
-                    response1.data = data;
-                    response1.colabUsersDetails = colabUsersDetails;
-                    resolve(response1)
+                console.log("result in collb service--->", colabUsersDetails);
+                let response1 = {}
+                response1.data = data;
+                response1.colabUsersDetails = colabUsersDetails;
+                resolve(response1)
             } else {
                 reject(err)
 
@@ -758,7 +645,6 @@ exports.getAllCollaborator = async (req, res) => {
     })
 }
 
-
 const userModelEX1 = require('../model/dataModel')
 exports.user = (req) => {
     console.log("userssss");
@@ -766,63 +652,30 @@ exports.user = (req) => {
     console.log(req.body.lastName);
     console.log(req.body.car);
     return new Promise((resolve, reject) => {
-    
-
         let UsrModel = new userModelEX1.ModelUSER({
 
             "firstName": req.body.firstName,
             "lastName": req.body.lastName,
             "carName": req.body.carName
-
-        })  
+        })
         UsrModel.save((err, data) => {
             if (data) {
                 resolve(data);
             } else {
                 reject(err);
-                console.log("err",err); 
+                console.log("err", err);
             }
         })
     })
 }
 exports.getUser = (req) => {
-
     return new Promise((resolve, reject) => {
-       
- userModelEX1.ModelUSER.find({},(err,data)=>{
-     if(data){
-         resolve(data)
-     }else{
-         reject(err)
-     }
- })
-       
+        userModelEX1.ModelUSER.find({}, (err, data) => {
+            if (data) {
+                resolve(data)
+            } else {
+                reject(err)
+            }
+        })
     })
 }
-
-
-
-
-
-// exports.user = (req) => {
-//     return new Promise((resolve, reject) => {
-//         console.log("userssss");
-
-//         let UsrModel = new userModelEX.user({
-//             "_id": new mongoose.Types.ObjectId(),
-//             "name": req.body.name,
-//             "car": req.body.car
-
-//         })  
-//         UsrModel.save((err, data) => {
-//             if (data) {
-//                 resolve(data);
-//             } else {
-//                 reject(err);
-//             }
-           
-//         })
-       
-//     })
-// }
-

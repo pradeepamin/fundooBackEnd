@@ -1,13 +1,10 @@
 const noteService = require('../services/noteServices')
-const scheduler=require('../helper/reminderScheduler')
-const logger=require('../helper/logger')
-
+const scheduler = require('../helper/reminderScheduler')
+const logger = require('../helper/logger')
 
 
 exports.addNote = (req, res) => {
-
     console.log("req.", req.body);
-
     req.checkBody('title', 'discription is invalid').notEmpty();
     req.checkBody('description', 'discription is invalid').notEmpty();
     var error = req.validationErrors();
@@ -37,8 +34,8 @@ exports.addNote = (req, res) => {
             })
     }
 }
-exports.getAllNote = (req, res) => {
 
+exports.getAllNote = (req, res) => {
     let response = {};
     noteService.getAllNote(req)
         .then((data) => {
@@ -51,9 +48,8 @@ exports.getAllNote = (req, res) => {
             response.data = err;
             res.status(404).send(response)
         })
-} 
+}
 // exports.getCollaboratorNote = (req, res) => {
-
 //     let response = {};
 //     noteService.getCollaboratedNotes(req)
 //         .then((data) => {
@@ -82,8 +78,8 @@ exports.deleteNote = (req, res) => {
             response.sucess = true;
             response.data = data;
             res.status(200).send(response);
-            console.log("data from deleteNote-->",data);
-            
+            console.log("data from deleteNote-->", data);
+
         })
         .catch((err) => {
             response.sucess = false;
@@ -93,16 +89,7 @@ exports.deleteNote = (req, res) => {
 }
 
 exports.updateNote = (req, res) => {
-    // req.checkBody('userId','user id is invalid').notEmpty();
-    // req.checkBody('title','title is invalid').notEmpty();
-    // req.checkBody('description','description is not valid').notEmpty();
-    // let error=req.validationErrors();
     let response = {};
-    // if(error){
-    //     response.error=error;
-    //     response.sucess=false;
-    //     res.status(422).send(response)
-    // }
     noteService.updateNote(req)
         .then((data) => {
             response.sucess = true;
@@ -114,7 +101,8 @@ exports.updateNote = (req, res) => {
             response.data = err;
             res.status(500).send(response);
         })
-} 
+}
+
 exports.getDeleteNote = (req, res) => {
     let response = {};
     noteService.getDeleteNote(req)
@@ -128,7 +116,8 @@ exports.getDeleteNote = (req, res) => {
             response.data = err;
             res.status(500).send(response);
         })
-} 
+}
+
 exports.unDeleteNote = (req, res) => {
     let response = {};
     noteService.unDeleteNote(req)
@@ -143,13 +132,9 @@ exports.unDeleteNote = (req, res) => {
             res.status(500).send(response);
         })
 }
- 
-
 
 exports.addCollaborator = (req, res) => {
     let response = {};
-  
-    
     noteService.addCollaborator(req)
         .then((data) => {
             response.succccess = true
@@ -163,25 +148,21 @@ exports.addCollaborator = (req, res) => {
 }
 
 exports.getCollaborator = (req, res) => {
-     req.checkBody('noteId','enter the name as noteId').notEmpty();
-     console.log("REQQQ->in controller",req.body);
-    let error=req.validationErrors();
+    req.checkBody('noteId', 'enter the name as noteId').notEmpty();
+    console.log("REQQQ->in controller", req.body);
+    let error = req.validationErrors();
     let response = {};
-    if(error){
-        response.error=error;
-        response.sucess=false;
+    if (error) {
+        response.error = error;
+        response.sucess = false;
         res.status(422).send(response)
     }
-   
     noteService.getCollaborator(req)
-
         .then((data) => {
-            
-            
             response.sucess = true;
             response.data = data;
             res.status(200).send(response)
-           
+
         })
         .catch((err) => {
             response.sucess = false
@@ -191,8 +172,6 @@ exports.getCollaborator = (req, res) => {
 }
 
 exports.deleteCollaborator = (req, res) => {
-    console.log("Ress to delete in  body--->",req.body);
-    
     let response = {};
     noteService.deleteCollaborator(req)
         .then((data) => {
@@ -205,7 +184,8 @@ exports.deleteCollaborator = (req, res) => {
             response.data = err;
             res.status(500).send(response)
         })
-}  
+}
+
 exports.getAllCollaborator = (req, res) => {
     let response = {};
     noteService.getAllCollaborator(req)
@@ -219,13 +199,9 @@ exports.getAllCollaborator = (req, res) => {
             response.data = err;
             res.status(500).send(response)
         })
-} 
-
-
-
+}
 
 exports.archiveNote = (req, res) => {
-    // req.checkBody("noteId","invalid note if").notEmpty();
     let response = {};
     noteService.archiveNote(req)
         .then((data) => {
@@ -239,8 +215,6 @@ exports.archiveNote = (req, res) => {
             res.status(500).send(response)
         })
 }
-
-
 
 exports.unarchiveNote = (req, res) => {
     let response = {};
@@ -273,12 +247,9 @@ exports.getArchiveNote = (req, res) => {
 }
 
 exports.addReminder = (req, res) => {
-    // console.log("In con",req);
-
     let response = {};
     noteService.addReminder(req)
         .then((data) => {
-            
             scheduler.scheduleReminder(data)
             response.sucess = true;
             response.data = data;
@@ -291,22 +262,7 @@ exports.addReminder = (req, res) => {
         })
 }
 
-
-// let reminderResponse=require('../helper/reminderScheduler')
-// exports.reminderResponse=(req,res)={
-//     reminderResponse.scheduleReminder(req)
-//     .then((data)=>{
-//         response.sucess = true;
-//             response.data = data;
-//             res.status(200).send(response)
-//     })
-
-// }
-
-
 exports.deleteReminder = (req, res) => {
-    // console.log("In con",req);
-
     let response = {};
     noteService.deleteReminder(req)
         .then((data) => {
@@ -322,9 +278,7 @@ exports.deleteReminder = (req, res) => {
 }
 
 exports.createLabel = (req, res) => {
-
     req.checkBody('labelName', 'NoteName is invalid').notEmpty();
-    // req.checkBody('UserId', 'userId is invalid').notEmpty();
     var error = req.validationErrors();
     var response = {};
     if (error) {
@@ -349,59 +303,53 @@ exports.createLabel = (req, res) => {
 
 
 exports.updateLabel = (req, res) => {
-    
     var response = {};
-    
-        noteService.updateLabel(req)
-            .then((data) => {
-                response.sucess = true;
-                response.data = data
-                res.status(200).send(response)
-                console.log(response);
 
-            })
-            .catch((err) => {
-                response.sucess = false;
-                response.err = err
-                res.status(404).send(response)
-            })
+    noteService.updateLabel(req)
+        .then((data) => {
+            response.sucess = true;
+            response.data = data
+            res.status(200).send(response)
+            console.log(response);
+        })
+        .catch((err) => {
+            response.sucess = false;
+            response.err = err
+            res.status(404).send(response)
+        })
 }
+
 exports.getAllLabel = (req, res) => {
-    
     var response = {};
-    
-        noteService.getAllLabel(req)
-            .then((data) => {
-                response.sucess = true;
-                response.data = data
-                res.status(200).send(response)
-                console.log(response);
+    noteService.getAllLabel(req)
+        .then((data) => {
+            response.sucess = true;
+            response.data = data
+            res.status(200).send(response)
+            console.log(response);
+        })
+        .catch((err) => {
+            response.sucess = false;
+            response.err = err
+            res.status(404).send(response)
+        })
+}
 
-            })
-            .catch((err) => {
-                response.sucess = false;
-                response.err = err
-                res.status(404).send(response)
-            })
-} 
 exports.deleteLabel = (req, res) => {
-    
     var response = {};
-    
-        noteService.deleteLabel(req)
-            .then((data) => {
-                response.sucess = true;
-                response.data = data
-                res.status(200).send(response)
-                console.log(response);
-
-            })
-            .catch((err) => {
-                response.sucess = false;
-                response.err = err
-                res.status(404).send(response)
-            })
-} 
+    noteService.deleteLabel(req)
+        .then((data) => {
+            response.sucess = true;
+            response.data = data
+            res.status(200).send(response)
+            console.log(response);
+        })
+        .catch((err) => {
+            response.sucess = false;
+            response.err = err
+            res.status(404).send(response)
+        })
+}
 
 exports.noteLabel = (req, res) => {
     req.check('noteId', 'Id invalid').notEmpty()
@@ -412,9 +360,8 @@ exports.noteLabel = (req, res) => {
         response.error = error;
         response.sucess = false;
         res.status(422).send(response);
-      
+
     } else {
-    
         noteService.noteLabel(req)
             .then((data) => {
                 response.sucess = true;
@@ -428,8 +375,9 @@ exports.noteLabel = (req, res) => {
                 response.err = err
                 res.status(404).send(response)
             })
-        }
-} 
+    }
+}
+
 exports.noteLabelUndo = (req, res) => {
     req.check('noteId', 'Id invalid').notEmpty()
     req.check('labelId', 'Id invalid').notEmpty()
@@ -439,9 +387,7 @@ exports.noteLabelUndo = (req, res) => {
         response.error = error;
         response.sucess = false;
         res.status(422).send(response);
-      
     } else {
-    
         noteService.noteLabelUndo(req)
             .then((data) => {
                 response.sucess = true;
@@ -455,71 +401,57 @@ exports.noteLabelUndo = (req, res) => {
                 response.err = err
                 res.status(404).send(response)
             })
-        }
-} 
+    }
+}
+
 exports.noteColor = (req, res) => {
-    
     var error = req.validationErrors();
     var response = {};
     if (error) {
         response.error = error;
         response.sucess = false;
         res.status(422).send(response);
-      
     } else {
-    
         noteService.noteColor(req)
             .then((data) => {
                 response.sucess = true;
                 response.data = data
                 res.status(200).send(response)
                 console.log(response);
-
             })
             .catch((err) => {
                 response.sucess = false;
                 response.err = err
                 res.status(404).send(response)
             })
-        }
-} 
+    }
+}
 
 
 exports.noteImage = (req, res) => {
-    // console.log("Req file--",req.body.request);
-    // console.log("Req file--",req.file.location);
-    // const req1 = req.body.request;
-    // const imageURL = req.file.location;
-
     var error = req.validationErrors();
     var response = {};
     if (error) {
         response.error = error;
         response.sucess = false;
         res.status(422).send(response);
-      
     } else {
-    
         noteService.noteImage(req)
             .then((data) => {
-    
                 response.sucesssss = true;
                 response.data = data
                 res.status(200).send(response)
                 console.log(response);
-
             })
             .catch((err) => {
                 response.sucess = false;
                 response.err = err
                 res.status(404).send(response)
             })
-        }
-}  
+    }
+}
 
 exports.deleteNoteImage = (req, res) => {
-    // console.log("In con",req);
-
     let response = {};
     noteService.deleteNoteImage(req)
         .then((data) => {
@@ -551,76 +483,76 @@ exports.deleteNoteImage = (req, res) => {
 
 
 exports.popEx = (req, res) => {
-   let response={};
-        noteService.popEx(req)
-            .then((data) => {
-                response.sucess = true;
-                response.data = data
-                res.status(200).send(response)
-                console.log(response);
+    let response = {};
+    noteService.popEx(req)
+        .then((data) => {
+            response.sucess = true;
+            response.data = data
+            res.status(200).send(response)
+            console.log(response);
 
-            })
-            .catch((err) => {
-                response.sucess = false;
-                response.err = err
-                res.status(404).send(response)
-            })
-        
-} 
+        })
+        .catch((err) => {
+            response.sucess = false;
+            response.err = err
+            res.status(404).send(response)
+        })
+
+}
 exports.popEx1 = (req, res) => {
-    let response={};
-         noteService.popEx1(req)
-             .then((data) => {
-                 response.sucess = true;
-                 response.data = data
-                 res.status(200).send(response)
-                 console.log(response);
- 
-             })
-             .catch((err) => {
-                 response.sucess = false;
-                 response.err = err
-                 res.status(404).send(response)
-             })
-         
- } 
- 
+    let response = {};
+    noteService.popEx1(req)
+        .then((data) => {
+            response.sucess = true;
+            response.data = data
+            res.status(200).send(response)
+            console.log(response);
 
- exports.user = (req, res) => {
-    let response={};
-         noteService.user(req)
-             .then((data) => {
-                 response.sucess = true;
-                 response.data = data
-                 res.status(200).send(response)
-                 console.log(response);
- 
-             })
-             .catch((err) => {
-                 response.fal = false;
-                 response.err = err
-                 res.status(404).send(response)
-             })
-         
- } 
- exports.getUser = (req, res) => {
-     let response={};
-          noteService.getUser(req)
-              .then((data) => {
-                  response.sucess = true;
-                  response.data = data
-                  res.status(200).send(response)
-                  console.log(response);
-  
-              })
-              .catch((err) => {
-                  response.sucess = false;
-                  response.err = err
-                  res.status(404).send(response)
-              })
-          
-  } 
-  
+        })
+        .catch((err) => {
+            response.sucess = false;
+            response.err = err
+            res.status(404).send(response)
+        })
+
+}
+
+
+exports.user = (req, res) => {
+    let response = {};
+    noteService.user(req)
+        .then((data) => {
+            response.sucess = true;
+            response.data = data
+            res.status(200).send(response)
+            console.log(response);
+
+        })
+        .catch((err) => {
+            response.fal = false;
+            response.err = err
+            res.status(404).send(response)
+        })
+
+}
+exports.getUser = (req, res) => {
+    let response = {};
+    noteService.getUser(req)
+        .then((data) => {
+            response.sucess = true;
+            response.data = data
+            res.status(200).send(response)
+            console.log(response);
+
+        })
+        .catch((err) => {
+            response.sucess = false;
+            response.err = err
+            res.status(404).send(response)
+        })
+
+}
+
 
 
 

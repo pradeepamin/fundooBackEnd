@@ -20,7 +20,6 @@ router.post('/getCollaborator',noteVerify.userVerify,noteController.getCollabora
 router.put('/deleteCollaborator',noteVerify.userVerify,noteController.deleteCollaborator)
 router.get('/getAllCollaborator',noteVerify.userVerify,noteController.getAllCollaborator);
 
-
 router.put('/archiveNote',noteVerify.userVerify,noteController.archiveNote);
 router.put('/unarchiveNote',noteVerify.userVerify,noteController.unarchiveNote)
 router.get('/getArchiveNote',noteVerify.userVerify,noteController.getArchiveNote)

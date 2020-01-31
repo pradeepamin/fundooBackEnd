@@ -18,7 +18,6 @@ const dbConnect=require('./configuration/dbConfig')
 const expressValidator=require('express-validator');
 require('dotenv').config()
 
-
 const app=express();
 app.use(cors());
 
@@ -28,7 +27,6 @@ app.use(expressValidator());
 
 app.use('/user', routerUser);
 app.use('/note', routerNote);
-console.log("process.env",process.env.PORT);
 
 //Initalizing the app port number,Telling frame work to start service
 app.listen(process.env.PORT, () => {
@@ -36,10 +34,5 @@ app.listen(process.env.PORT, () => {
     dbConnect.dbConnection();
 }); 
 
-// var schedule = require('node-schedule');
- 
-// var j = schedule.scheduleJob('* /1 * * * *', function(){
-//   console.log('The answer to life, the universe, and everything!');
-// });
-
+//this app export is used for mocha testing 
 module.exports = app

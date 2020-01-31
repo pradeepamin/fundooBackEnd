@@ -26,5 +26,4 @@ const addCollaborator = new Schema({
         timestamps: true
     }
 )
-
 exports.COLLABORATOR = mongoose.model("collaborator", addCollaborator)

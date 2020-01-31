@@ -5,12 +5,8 @@ const users = Schema({
 //   _id: Schema.Types.ObjectId,
   firstName: String,
   lastName:String,
-  carName:String
-
-
-  
+  carName:String 
 });
-
 
 
 exports.ModelUSER = mongoose.model('carDetails', users);
